@@ -63,7 +63,7 @@ auto& operator<<(ostream& s, pair<A, B> const& v) {
 auto iota(int l, int r) {
   assert(l <= r);
   vector<int> a(r - l);
-  repeat(i, l, r) a[i - l] = i;
+  iota(all(a), l);
   return a;
 }
 
