@@ -26,7 +26,7 @@ def codeescape(input):
     input = input.replace('{', r'\{')
     input = input.replace('}', r'\}')
     input = input.replace('^', r'\ensuremath{\hat{\;}}')
-    input = escape(input)
+    #input = escape(input)
     return input
 
 def ordoescape(input, esc=True):

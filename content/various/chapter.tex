@@ -20,6 +20,16 @@
 			Similarly one can catch SIGABRT (assertion failures) and SIGFPE (zero divisions).
 			\verb@_GLIBCXX_DEBUG@ failures generate SIGABRT (or SIGSEGV on gcc 5.4.0 apparently).
 		\item \verb@feenableexcept(29);@ kills the program on NaNs (\texttt 1), 0-divs (\texttt 4), infinities (\texttt 8) and denormals (\texttt{16}).
+
+			\begin{lstlisting}[language=C++]
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+#include <fenv.h>
+#include <stdio.h>
+feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
+// & ~FE_UNDERFLOW
+\end{lstlisting}
 	\end{itemize}
 
 \section{Optimization tricks}
@@ -43,4 +53,5 @@
 	\kactlimport{SmallPtr.h}
 	\kactlimport{BumpAllocatorSTL.h}
 	% \kactlimport{Unrolling.h}
-	\kactlimport{SIMD.h}
+	%\kactlimport{SIMD.h}
+	\kactlimport{Int128.h}

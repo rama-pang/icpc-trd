@@ -8,23 +8,36 @@
  */
 #pragma once
 
+// not yet tested!
+
 #include "euclid.h"
 
-const ll mod = 17; // change to something else
+const int mod = 17; // change to something else
 struct Mod {
-	ll x;
-	Mod(ll xx) : x(xx) {}
-	Mod operator+(Mod b) { return Mod((x + b.x) % mod); }
-	Mod operator-(Mod b) { return Mod((x - b.x + mod) % mod); }
-	Mod operator*(Mod b) { return Mod((x * b.x) % mod); }
-	Mod operator/(Mod b) { return *this * invert(b); }
-	Mod invert(Mod a) {
-		ll x, y, g = euclid(a.x, mod, x, y);
-		assert(g == 1); return Mod((x + mod) % mod);
+	int x;
+	Mod(int xx=0) : x(xx%mod) { if(x<0) x+=mod; }
+	void operator+=(Mod b) { if((x+=b.x)>=mod) x-=mod; }
+	void operator-=(Mod b) { if((x-=b.x)<0) x+=mod; }
+	void operator*=(Mod b) { x=int((x * b.x) % mod); }
+		
+	[[nodiscard]] Mod pow(auto p) const {
+		assert(p>=0);
+		Mod a=*this;
+		Mod ans = 1; for (; p; p >>= 1, a *= a) if (p&1) ans *= a;
+		return ans;
 	}
-	Mod operator^(ll e) {
-		if (!e) return Mod(1);
-		Mod r = *this ^ (e / 2); r = r * r;
-		return e&1 ? *this * r : r;
+
+	[[nodiscard]] Mod inv() {
+		ll z, y, g = euclid(x, mod, z, y);
+		assert(g == 1); return z;
 	}
+	void operator/=(Mod b) { *this *= b.inv(); }
+
+#define A(O) [[nodiscard]] friend Mod operator O(Mod a, Mod b) { a O##= b; return a; }
+	A(+) A(-) A(*) A(/)
+#undef A
+
+#define C(O) [[nodiscard]] bool operator O(Mod b) const { return x O b.x; }
+	C(==) C(!=) C(<) C(>) C(<=) C(>=)
+#undef C
 };
