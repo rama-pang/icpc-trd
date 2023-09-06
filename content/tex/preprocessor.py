@@ -7,6 +7,7 @@
 import sys
 import getopt
 import subprocess
+from pathlib import Path
 
 
 def escape(input):
@@ -147,7 +148,7 @@ def processwithcomments(caption, instream, outstream, listingslang):
 
     if listingslang in ['C++', 'Java']:
         hash_script = 'hash'
-        p = subprocess.Popen(['sh', 'content/contest/%s.sh' % hash_script], stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding="utf-8")
+        p = subprocess.Popen(['sh', Path(__file__).parent.parent / ('contest/%s.sh' % hash_script)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding="utf-8")
         hsh, _ = p.communicate(nsource)
         hsh = hsh.split(None, 1)[0]
         hsh = hsh + ', '
@@ -267,7 +268,7 @@ def main():
         if print_header_value is not None:
             print_header(print_header_value, outstream)
             return
-        print(" * \x1b[1m{}\x1b[0m".format(caption))
+        print(" * \x1b[1m{}\x1b[0m".format(caption), file=sys.stderr)
         if language in ["cpp", "cc", "c", "h", "hpp"]:
             processwithcomments(caption, instream, outstream, 'C++')
         elif language in ["java", "kt"]:
