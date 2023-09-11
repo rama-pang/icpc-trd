@@ -2,7 +2,7 @@ ru defaults.vim
 no U :up<cr>
 au filetype vim no <buffer> U :up<bar>so %<cr>
 
-se ts=4 sw=4 nohls noet acd udf cino=j1 rnu fdm=syntax
+se ts=4 sw=4 nohls noet acd udf cino=j1 rnu fdm=syntax mouse=a
 au filetype cpp no <silent> <buffer> \r :up<bar>term ++close ++shell g++ -g -DLOCAL -D_GLIBCXX_DEBUG -Wall -Wconversion -Wshadow -ftrapv % && gdb -q a.out -ex 'r <i' <bar><bar> read<cr>
 
 tmap <c-[><c-[> <c-w>N

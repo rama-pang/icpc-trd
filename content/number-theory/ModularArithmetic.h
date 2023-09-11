@@ -12,13 +12,13 @@
 
 #include "euclid.h"
 
-const int mod = 17; // change to something else
+let mod = 17; // change to something else
 struct Mod {
 	int x;
-	Mod(int xx=0) : x(xx%mod) { if(x<0) x+=mod; }
+	Mod(int y=0) : x(y%mod) { if(x<0) x+=mod; }
 	void operator+=(Mod b) { if((x+=b.x)>=mod) x-=mod; }
 	void operator-=(Mod b) { if((x-=b.x)<0) x+=mod; }
-	void operator*=(Mod b) { x=int((x * b.x) % mod); }
+	void operator*=(Mod b) { x=int(ll(x) * b.x % mod); }
 		
 	[[nodiscard]] Mod pow(auto p) const {
 		assert(p>=0);
@@ -27,7 +27,7 @@ struct Mod {
 		return ans;
 	}
 
-	[[nodiscard]] Mod inv() {
+	[[nodiscard]] Mod inv() const {
 		ll z, y, g = euclid(x, mod, z, y);
 		assert(g == 1); return z;
 	}
