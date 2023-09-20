@@ -15,22 +15,21 @@
 
 struct LCA {
 	int T = 0;
-	vi time, path, ret;
+	vi time, path, back;
 	RMQ<int> rmq;
 
-	LCA(vector<vi>& C) : time(sz(C)), rmq((dfs(C,0,-1), ret)) {}
+	LCA(vector<vi>& C) : time(sz(C)), rmq((dfs(C,0,-1), back)) {}
 	void dfs(vector<vi>& C, int v, int par) {
 		time[v] = T++;
 		for (int y : C[v]) if (y != par) {
-			path.push_back(v), ret.push_back(time[v]);
+			path.push_back(v); back.push_back(time[v]);
 			dfs(C, y, v);
 		}
 	}
 
-	int lca(int a, int b) {
+	int operator()(int a, int b) const{
 		if (a == b) return a;
-		tie(a, b) = minmax(time[a], time[b]);
-		return path[rmq.query(a, b)];
+		return path[rmq(min(time[a], time[b]), max(time[a], time[b]))];
 	}
 	//dist(a,b){return depth[a] + depth[b] - 2*depth[lca(a,b)];}
 };
