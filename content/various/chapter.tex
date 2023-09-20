@@ -1,5 +1,18 @@
 \chapter{Various}
 
+\section{Randomization}
+
+\begin{lstlisting}[language=C++]
+mt19937 engine(
+#if LOCAL
+		123456
+#else
+		chrono::duration_cast<chrono::nanoseconds>(
+			chrono::steady_clock::now().time_since_epoch()).count()
+#endif
+		);
+\end{lstlisting}
+
 \section{Intervals}
 	\kactlimport{IntervalContainer.h}
 	\kactlimport{IntervalCover.h}
