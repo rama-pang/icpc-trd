@@ -28,6 +28,7 @@ struct MCMF {
 		seen(N), dist(N), pi(N), par(N) {}
 
 	void addEdge(int from, int to, ll cap, ll cost) {
+		assert(!this->cap[from][to]); // double edge not supported
 		this->cap[from][to] = cap;
 		this->cost[from][to] = cost;
 		ed[from].push_back(to);
