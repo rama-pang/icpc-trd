@@ -10,7 +10,7 @@
  * Output will have size $\le n$.
  * Usage: berlekampMassey({0, 1, 1, 3, 5, 11}) // {1, 2}
  * Time: O(N^2)
- * Status: bruteforce-tested mod 5 for n <= 5 and all s
+ * Status: bruteforce-tested mod 5 for n <= 5 and all s, tested on https://www.spoj.com/problems/ITRIX12E/
  */
 #pragma once
 
