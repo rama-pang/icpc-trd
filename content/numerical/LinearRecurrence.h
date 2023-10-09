@@ -8,6 +8,7 @@
  * given $S[0 \ldots \ge n-1]$ and $tr[0 \ldots n-1]$.
  * Faster than matrix multiplication.
  * Useful together with Berlekamp--Massey.
+ * $k$ is 0-indexed, if $k < n$ then return $S[k]$.
  * Usage: linearRec({0, 1}, {1, 1}, k) // k'th Fibonacci number
  * Time: O(n^2 \log k)
  * Status: bruteforce-tested mod 5 for n <= 5, tested on https://www.spoj.com/problems/ITRIX12E/
