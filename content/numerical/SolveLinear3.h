@@ -7,7 +7,7 @@
  *  Currently only suitable for finite field.
  * Status: tested on https://codeforces.com/contest/1155/problem/E
  */
-#include"/home/user202729/icpc-trd/content/numerical/Rref.h"
+#include"Rref.h"
 
 auto solveLinear(auto a){
 	rref(a);
