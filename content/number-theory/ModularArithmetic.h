@@ -29,8 +29,9 @@ struct Mod {
 	}
 
 	[[nodiscard]] Mod inv() const {
-		ll z, y, g = euclid(mod, x, z, y);
-		assert(g == 1); return int(y);
+		assert(x!=0);
+		return pow(mod-2);
+		//ll z, y, g = euclid(mod, x, z, y); assert(g == 1); return int(y);
 	}
 	void operator/=(Mod b) { *this *= b.inv(); }
 
