@@ -63,14 +63,20 @@ vm polyinv(vm q, int d) { // get inverse series mod x^2^d. q must not be empty a
 	if(d==0) return {1/q[0]};
 	let m=1<<(d-1), n=m*2;
 	q.resize(n);
-	vm a(m+all(q)); q.resize(m);
-	vm f=polyinv(q, d-1), b=conv(move(q), f);
-	a=conv(move(a), f);
-	a.resize(m);
-	rep(i, 0, m) a[i]=(i==m-1 ? 0: -b[i+m])-a[i];
-	a=conv(move(a), f);
-	f.insert(f.end(), a.begin(), a.begin()+m);
-	return f;
+    vm a(m+all(q)); q.resize(m);
+    vm f=polyinv(q, d-1);
+    f.resize(n); q.resize(n); a.resize(n);
+    vm g=f;
+    ntt(g); ntt(q); ntt(a);
+    rep(i, 0, n) q[i]*=g[i], a[i]*=-g[i];
+    intt(q); intt(a);
+    rep(i, 0, m) a[i]-=q[i+m];
+    fill(m+all(a), 0);
+    ntt(a);
+    rep(i, 0, n) a[i]*=g[i];
+    intt(a);
+    copy(all(a)-m, begin(f)+m);
+    return f;
 }
 
 auto Polydiv(vm const& b, int n){
