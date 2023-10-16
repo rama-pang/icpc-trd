@@ -49,14 +49,12 @@ void intt(vm &a) {
 	ntt(a);
 }
 int ceillog2(int n){ return 31^__builtin_clz(n*2-1); }
-vm conv(const vm &a, const vm &b) {
-	if (a.empty() || b.empty()) return {};
-	int s = sz(a) + sz(b) - 1, n = 1<<ceillog2(s);
-	let inv = Mod(1)/n;
-	vm L(a), R(b), out(n);
+vm conv(vm L, vm R) {
+	if (L.empty() || R.empty()) return {};
+	int s = sz(L) + sz(R) - 1, n = 1<<ceillog2(s);
 	L.resize(n), R.resize(n);
 	ntt(L), ntt(R);
-	rep(i,0,n) out[-i & (n - 1)] = L[i] * R[i] * inv;
-	ntt(out);
-	out.resize(s); return out;
+	rep(i,0,n) L[i] *= R[i];
+	intt(L);
+	L.resize(s); return L;
 }
