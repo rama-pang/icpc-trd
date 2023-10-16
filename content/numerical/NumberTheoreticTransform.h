@@ -75,8 +75,9 @@ vm polyinv(vm q, int d) { // get inverse series mod x^2^d. q must not be empty a
 
 
 vm polydiv(vm const& a, vm const& b) {
-	assert(a.back()!=0 and b.back()!=0);
+	assert(b.back()!=0);
 	if(sz(a) < sz(b)) return {};
+	assert(a.back()!=0);
 	let d = sz(a)-sz(b)+1;
 	vm q=conv({a.rbegin(), a.rbegin()+d}, polyinv({b.rbegin(), b.rbegin()+min(sz(b),d)}, ceillog2(d)));
 	q.resize(d); reverse(all(q));
