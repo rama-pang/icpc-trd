@@ -30,6 +30,12 @@ int main() {
 		b.resize(ra() % 10);
 		for(auto &x: a) x = (ra() % 100 - 50+mod)%mod;
 		for(auto &x: b) x = (ra() % 100 - 50+mod)%mod;
+
+		if(not a.empty() and a[0]!=0){
+			let f=simpleConv(a, polyinv(a, ceillog2(sz(a))));
+			rep(i, 0, ceillog2(sz(a))) assert(f[i]==(i==0));
+		}
+
 		for(auto &x: simpleConv(a, b)) res += x * ind++ ;
 		for(auto &x: conv(a, b)) res2 += x * ind2++ ;
 		a.resize(16);

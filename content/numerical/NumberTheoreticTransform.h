@@ -12,7 +12,7 @@
    pointwise, divide by n, reverse(start+1, end), NTT back.
  * Inputs must be in [0, mod).
  * Time: O(N \log N)
- * Status: stress-tested
+ * Status: stress-tested, tested on https://judge.yosupo.jp/problem/inv_of_formal_power_series etc.
  */
 #pragma once
 
@@ -57,4 +57,18 @@ vm conv(vm L, vm R) {
 	rep(i,0,n) L[i] *= R[i];
 	intt(L);
 	L.resize(s); return L;
+}
+
+vm polyinv(vm q, int d) { // get inverse series mod x^2^d. q must not be empty and q[0]!=0. Can set d=ceillog2(sz(q))
+	if(d==0) return {1/q[0]};
+	let m=1<<(d-1), n=m*2;
+	q.resize(n);
+	vm a(m+all(q)); q.resize(m);
+	vm f=polyinv(q, d-1), b=conv(move(q), f);
+	a=conv(move(a), f);
+	a.resize(m);
+	rep(i, 0, m) a[i]=(i==m-1 ? 0: -b[i+m])-a[i];
+	a=conv(move(a), f);
+	f.insert(f.end(), a.begin(), a.begin()+m);
+	return f;
 }
