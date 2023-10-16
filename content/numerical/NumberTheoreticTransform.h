@@ -73,15 +73,26 @@ vm polyinv(vm q, int d) { // get inverse series mod x^2^d. q must not be empty a
 	return f;
 }
 
-
+struct Polydiv{
+	int m, n; // n: maximum size of a
+	vm i;
+	Polydiv(vm const& b, int n): m(sz(b)), n(n){
+		assert(b.back()!=0);
+		let d = n-m+1;
+		if(d>0) i=polyinv({b.rbegin(), b.rbegin()+min(m,d)}, ceillog2(d));
+	}
+	vm operator()(vm const& a)const{
+		assert(sz(a)<=n);
+		let d = sz(a)-m+1;
+		if(d<=0) return {};
+		assert(a.back()!=0);
+		vm q=conv({a.rbegin(), a.rbegin()+d}, {i.begin(), i.begin()+d});
+		q.resize(d); reverse(all(q));
+		return q;
+	}
+};
 vm polydiv(vm const& a, vm const& b) {
-	assert(b.back()!=0);
-	if(sz(a) < sz(b)) return {};
-	assert(a.back()!=0);
-	let d = sz(a)-sz(b)+1;
-	vm q=conv({a.rbegin(), a.rbegin()+d}, polyinv({b.rbegin(), b.rbegin()+min(sz(b),d)}, ceillog2(d)));
-	q.resize(d); reverse(all(q));
-	return q;
+	return Polydiv(b,sz(a))(a);
 }
 vm polymod(vm a, vm b, vm q) {
 	b.pop_back();

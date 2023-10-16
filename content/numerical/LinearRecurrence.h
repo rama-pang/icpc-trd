@@ -28,6 +28,7 @@ Mod linearRec(vm S, vm tr, ll p) {
 	for(auto& x: m) x=-x;
 	reverse(all(m));
 	m.push_back(1);
+	let f=Polydiv(m, n*2);
 #endif
 
 	auto combine = [&](vm a, vm b) {
@@ -42,7 +43,7 @@ Mod linearRec(vm S, vm tr, ll p) {
 		return res;
 #else
 		let r=conv(move(a), move(b));
-		return polymod(r, m, polydiv(r, m));
+		return polymod(r, m, f(r));
 #endif
 	};
 
