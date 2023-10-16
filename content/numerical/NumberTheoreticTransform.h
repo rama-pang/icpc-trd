@@ -72,3 +72,23 @@ vm polyinv(vm q, int d) { // get inverse series mod x^2^d. q must not be empty a
 	f.insert(f.end(), a.begin(), a.begin()+m);
 	return f;
 }
+
+
+vm polydiv(vm const& a, vm const& b) {
+	assert(a.back()!=0 and b.back()!=0);
+	if(sz(a) < sz(b)) return {};
+	let d = sz(a)-sz(b)+1;
+	vm q=conv({a.rbegin(), a.rbegin()+d}, polyinv({b.rbegin(), b.rbegin()+min(sz(b),d)}, ceillog2(d)));
+	q.resize(d); reverse(all(q));
+	return q;
+}
+vm polymod(vm a, vm b, vm q) {
+	b.pop_back();
+	let n=sz(b);
+	a.resize(n);
+	if(n<sz(q)) q.resize(n);
+	let t=conv(move(q), move(b));
+	rep(i, 0, min(n, sz(t))) a[i]-=t[i];
+	while(not a.empty() and a.back()==0) a.pop_back();
+	return a;
+}
