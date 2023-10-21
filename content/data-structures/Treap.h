@@ -12,7 +12,7 @@
 
 struct Node {
 	Node *l = 0, *r = 0;
-	int val, y, c = 1;
+	int val, y, c = 1; // val: value stored, y: priority, c: count node in subtree
 	Node(int val) : val(val), y(rand()) {}
 	void recalc();
 };
@@ -24,7 +24,7 @@ template<class F> void each(Node* n, F f) {
 	if (n) { each(n->l, f); f(n->val); each(n->r, f); }
 }
 
-pair<Node*, Node*> split(Node* n, int k) {
+pair<Node*, Node*> split(Node* n, int k) { // left tree has k nodes
 	if (!n) return {};
 	if (cnt(n->l) >= k) { // "n->val >= k" for lower_bound(k)
 		auto pa = split(n->l, k);
