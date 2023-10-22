@@ -7,6 +7,8 @@
  * \texttt{crt(a, m, b, n)} computes $x$ such that $x\equiv a \pmod m$, $x\equiv b \pmod n$.
  * If $|a| < m$ and $|b| < n$, $x$ will obey $0 \le x < \text{lcm}(m, n)$.
  * Assumes $mn < 2^{62}$.
+ *
+ * For a speedup if $m$ and $n$ are fixed, $\def\crt{\operatorname{crt}}\crt(a,m,b,n)=\crt(1,m,0,n)\times a+\crt(0,m,1,n)\times b\bmod \operatorname{lcm}(m,n)$.
  * Time: $\log(n)$
  * Status: Works
  */
