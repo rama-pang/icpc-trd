@@ -20,7 +20,7 @@
 \usepackage[parfill]{parskip}           % For compact enumerations
 \usepackage[dvipsnames]{xcolor}
 \usepackage[normalem]{ulem}
-\usepackage[hidelinks]{hyperref}        % For clickable table of contents
+%\usepackage[hidelinks]{hyperref}        % For clickable table of contents
 
 \csname sys_if_shell_unrestricted:F\endcsname {\errmessage{Please enable shell escape!}}
 
@@ -124,7 +124,7 @@
 
 	\parindent \z@ \raggedright \normalfont
 		\interlinepenalty\@M
-	{\underline{\huge \bfseries #1} }
+	{\uline{\huge \bfseries #1} }
 	\ifnum \c@secnumdepth >\m@ne
 		{\huge\bfseries (\thechapter) \par\nobreak }
 	\fi
