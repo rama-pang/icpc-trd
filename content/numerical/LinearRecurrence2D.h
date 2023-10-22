@@ -90,17 +90,24 @@ Mod linearRec2D(let& table, auto tr, auto row, auto col){
 	i.resize(col+1);
 	assert(i[0]==-1); for(auto& x: i) x=-x;
 	let conv1=[&](vm a, vm b){ a=conv(move(a), move(b)); a.resize(col+1); return a; };
-	let add1=[&](vm& a, vm const& b){ a.resize(col+1); rep(i, 0, sz(a)) a[i]+=b[i]; };
-	tr.pop_back(); for(auto& row: tr) row=conv1(row, i);
+	let add1=[&](vm& a, vm const& b){ rep(i, 0, sz(a)) a[i]+=b[i]; };
+	tr.pop_back();
+
+	let k=1<<ceillog2(col*2+1);
+	for(auto& row: tr) row=conv1(row, i), row.resize(col+1), row.resize(k), ntt(row);
 	reverse(all(tr));
 
 	auto combine = [&](vector<vm> a, vector<vm> b) {
-		vector<vm> res(n*2-1);
-		rep(i,0,sz(a)) rep(j,0,sz(b)) add1(res[i + j], conv1(a[i], b[j]));
+		vector<vm> res(n*2-1, vm(k));
+		for(auto& x: a) x.resize(k), ntt(x);
+		for(auto& x: b) x.resize(k), ntt(x);
+		rep(i,0,sz(a)) rep(j,0,sz(b)) rep(l, 0, k) res[i + j][l]+= a[i][l]* b[j][l];
 		while(sz(res)>n){
-			rep(j,0,n) add1(res.end()[-j-2], conv1(res.back(), tr[j]));
-			res.pop_back();
+			auto m=move(res.back()); res.pop_back();
+			intt(m); fill(col+1+all(m), 0); ntt(m);
+			rep(j,0,n) rep(l, 0, k) res.end()[-j-1][l]+= m[l]* tr[j][l];
 		}
+		for(auto& row: res) intt(row), row.resize(col+1);
 		return res;
 	};
 
