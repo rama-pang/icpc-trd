@@ -10,7 +10,7 @@
  *  https://open.kattis.com/problems/equationsolver
  * Description: Rref of a matrix.
  */
-
+#pragma once
 void rref(auto& a){
 	int fix=0;
 	rep(col, 0, sz(a[0])){

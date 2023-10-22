@@ -29,11 +29,15 @@ struct Mod {
 	}
 
 	[[nodiscard]] Mod inv() const {
-		assert(x!=0);
+		assert(x);
 		return pow(mod-2);
 		//ll z, y, g = euclid(mod, x, z, y); assert(g == 1); return int(y);
 	}
 	void operator/=(Mod b) { *this *= b.inv(); }
+
+	friend auto& operator<<(ostream& s, Mod x){
+		return s<<x.x-mod*(x>mod/2)<<'_';
+	}
 
 #define A(O) [[nodiscard]] friend Mod operator O(Mod a, Mod b) { a O##= b; return a; }
 	A(+) A(-) A(*) A(/)
