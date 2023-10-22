@@ -2,7 +2,7 @@
  * Author: user202729
  * Date: 2023-10-10
  * License: CC0
- * Description: Solves $A * x = b$. The passed-in matrix is $n$-row $m+1$-column, last column is $b$.
+ * Description: Solves $A \times x = b$. The passed-in matrix is $n$-row $m+1$-column, last column is $b$.
  *  Return empty vector if no solution.
  *  Currently only suitable for finite field.
  * Status: tested on https://codeforces.com/contest/1155/problem/E
