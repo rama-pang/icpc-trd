@@ -14,8 +14,7 @@
  */
 #pragma once
 
-template<class F>
-int ternSearch(int a, int b, F f) {
+int ternSearch(int a, int b, auto f) {
 	assert(a <= b);
 	while (b - a >= 5) {
 		int mid = (a + b) / 2;
