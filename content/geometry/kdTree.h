@@ -24,7 +24,7 @@ struct Node {
 	T distance(const P& p) { // min squared distance to a point
 		T x = (p.x < x0 ? x0 : p.x > x1 ? x1 : p.x);
 		T y = (p.y < y0 ? y0 : p.y > y1 ? y1 : p.y);
-		return (P(x,y) - p).dist2();
+		return (P(x,y) - p).norm();
 	}
 
 	Node(vector<P>&& vp) : pt(vp[0]) {
@@ -52,7 +52,7 @@ struct KDTree {
 		if (!node->first) {
 			// uncomment if we should not find the point itself:
 			// if (p == node->pt) return {INF, P()};
-			return make_pair((p - node->pt).dist2(), node->pt);
+			return make_pair((p - node->pt).norm(), node->pt);
 		}
 
 		Node *f = node->first, *s = node->second;

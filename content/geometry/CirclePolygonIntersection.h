@@ -18,7 +18,7 @@ double circlePoly(P c, double r, vector<P> ps) {
 	auto tri = [&](P p, P q) {
 		auto r2 = r * r / 2;
 		P d = q - p;
-		auto a = d.dot(p)/d.dist2(), b = (p.dist2()-r*r)/d.dist2();
+		auto a = d.dot(p)/d.norm(), b = (p.norm()-r*r)/d.norm();
 		auto det = a * a - b;
 		if (det <= 0) return arg(p, q) * r2;
 		auto s = max(0., -a-sqrt(det)), t = min(1., -a+sqrt(det));

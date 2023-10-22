@@ -23,7 +23,7 @@ pair<P, P> closest(vector<P> v) {
 		while (v[j].y <= p.y - d.x) S.erase(v[j++]);
 		auto lo = S.lower_bound(p - d), hi = S.upper_bound(p + d);
 		for (; lo != hi; ++lo)
-			ret = min(ret, {(*lo - p).dist2(), {*lo, p}});
+			ret = min(ret, {(*lo - p).norm(), {*lo, p}});
 		S.insert(p);
 	}
 	return ret.second;

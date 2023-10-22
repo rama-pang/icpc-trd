@@ -27,13 +27,13 @@ template<class T> struct Point3D {
 	P cross(R p) const {
 		return P(y*p.z - z*p.y, z*p.x - x*p.z, x*p.y - y*p.x);
 	}
-	T dist2() const { return x*x + y*y + z*z; }
-	double dist() const { return sqrt((double)dist2()); }
+	T norm() const { return x*x + y*y + z*z; }
+	double len() const { return sqrt((double)norm()); }
 	//Azimuthal angle (longitude) to x-axis in interval [-pi, pi]
 	double phi() const { return atan2(y, x); } 
 	//Zenith angle (latitude) to the z-axis in interval [0, pi]
 	double theta() const { return atan2(sqrt(x*x+y*y),z); }
-	P unit() const { return *this/(T)dist(); } //makes dist()=1
+	P unit() const { return *this/(T)len(); } //makes len()=1
 	//returns unit vector normal to *this and p
 	P normal(P p) const { return cross(p).unit(); }
 	//returns point rotated 'angle' radians ccw around axis
