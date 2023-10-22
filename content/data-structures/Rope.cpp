@@ -1,3 +1,9 @@
+/**
+ * Author: Codeforces
+ * Date: 2023-10-22
+ * Source: https://codeforces.com/blog/entry/10355
+ * Description: Rope data structure, STL extension.
+ */
 #include<ext/rope>
 using namespace __gnu_cxx;
 rope<int> v(3, 0); // initial list not supported
