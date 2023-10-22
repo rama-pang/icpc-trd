@@ -14,7 +14,7 @@
 void rref(auto& a){
 	int fix=0;
 	rep(col, 0, sz(a[0])){
-#if FINITEFIELD
+#if RREFFINITEFIELD
 		rep(row, fix, sz(a)) if(a[row][col]!=0)
 #else
 		let row=int(max_element(a.begin()+fix, a.end(), [&](let& x, let& y){return abs(x[col])<abs(y[col]);})-a.begin());
@@ -35,7 +35,7 @@ void rref(auto& a){
 			}
 
 			++fix;
-#if FINITEFIELD
+#if RREFFINITEFIELD
 			break;
 #endif
 		}

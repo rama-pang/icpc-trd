@@ -23,7 +23,7 @@ Mod linearRec(vm S, vm tr, ll p) {
 	int n = sz(tr);
 	assert(sz(S)==n);
 
-#if not SLOW
+#if not SLOWLINEARREC
 	auto m=tr;
 	for(auto& x: m) x=-x;
 	reverse(all(m));
@@ -32,7 +32,7 @@ Mod linearRec(vm S, vm tr, ll p) {
 #endif
 
 	auto combine = [&](vm a, vm b) {
-#if SLOW
+#if SLOWLINEARREC
 		vm res(n*2-1);
 		rep(i,0,sz(a)) rep(j,0,sz(b))
 			res[i + j] += a[i] * b[j];
