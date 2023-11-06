@@ -26,18 +26,18 @@ using vm=vector<Mod>;
 void ntt(vm &a) {
 	int n = sz(a), L = 31 ^ __builtin_clz(n);
 	assert(n==1<<L);
-	static vm rt(2, 1);
+	static vm rts(2, 1);
 	for (static int k = 2, s = 2; k < n; k *= 2, s++) {
-		rt.resize(n);
+		rts.resize(n);
 		Mod z[] = {1, root.pow(mod >> s)};
-		rep(i,k,2*k) rt[i] = rt[i / 2] * z[i & 1];
+		rep(i,k,2*k) rts[i] = rts[i / 2] * z[i & 1];
 	}
 	vi rev(n);
 	rep(i,0,n) rev[i] = (rev[i / 2] | (i & 1) << L) / 2;
 	rep(i,0,n) if (i < rev[i]) swap(a[i], a[rev[i]]);
 	for (int k = 1; k < n; k *= 2)
 		for (int i = 0; i < n; i += 2 * k) rep(j,0,k) {
-			Mod z = rt[j + k] * a[i + j + k], &ai = a[i + j];
+			Mod z = rts[j + k] * a[i + j + k], &ai = a[i + j];
 			a[i + j + k] = ai - z;
 			ai += z;
 		}

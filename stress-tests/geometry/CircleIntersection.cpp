@@ -10,8 +10,8 @@ int main() {
 		double rnd[6];
 		rep(i,0,6)
 			rnd[i] = rand() % 21 - 10;
-		P a(rnd[0], rnd[1]);
-		P b(rnd[2], rnd[3]);
+		P a{rnd[0], rnd[1]};
+		P b{rnd[2], rnd[3]};
 		double ra = rand() % 10;
 		double rb = rand() % 10;
 		if (a == b) continue;

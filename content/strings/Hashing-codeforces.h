@@ -45,11 +45,11 @@ vector<H> getHashes(string& str, int length) {
 	H h = 0, pw = 1;
 	rep(i,0,length)
 		h = h * C + str[i], pw = pw * C;
-	vector<H> ret = {h};
+	vector<H> re = {h};
 	rep(i,length,sz(str)) {
-		ret.push_back(h = h * C + str[i] - pw * str[i-length]);
+		re.push_back(h = h * C + str[i] - pw * str[i-length]);
 	}
-	return ret;
+	return re;
 }
 
 H hashString(string& s){H h{}; for(char c:s) h=h*C+c;return h;}

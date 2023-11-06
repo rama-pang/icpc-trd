@@ -39,7 +39,7 @@ pair<ll, vi> dmst(int n, int r, vector<Edge>& g) {
 	RollbackUF uf(n);
 	vector<Node*> heap(n);
 	for (Edge e : g) heap[e.b] = merge(heap[e.b], new Node{e});
-	ll res = 0;
+	ll re = 0;
 	vi seen(n, -1), path(n), par(n);
 	seen[r] = r;
 	vector<Edge> Q(n), in(n, {-1,-1}), comp;
@@ -51,7 +51,7 @@ pair<ll, vi> dmst(int n, int r, vector<Edge>& g) {
 			Edge e = heap[u]->top();
 			heap[u]->delta -= e.w, pop(heap[u]);
 			Q[qi] = e, path[qi++] = u, seen[u] = s;
-			res += e.w, u = uf.find(e.a);
+			re += e.w, u = uf.find(e.a);
 			if (seen[u] == s) { /// found cycle, contract
 				Node* cyc = 0;
 				int end = qi, time = uf.time();
@@ -71,5 +71,5 @@ pair<ll, vi> dmst(int n, int r, vector<Edge>& g) {
 		in[uf.find(inEdge.b)] = inEdge;
 	}
 	rep(i,0,n) par[i] = in[i].a;
-	return {res, par};
+	return {re, par};
 }

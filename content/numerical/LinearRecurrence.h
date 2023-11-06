@@ -33,14 +33,14 @@ Mod linearRec(vm S, vm tr, ll p) {
 
 	auto combine = [&](vm a, vm b) {
 #if SLOWLINEARREC
-		vm res(n*2-1);
+		vm re(n*2-1);
 		rep(i,0,sz(a)) rep(j,0,sz(b))
-			res[i + j] += a[i] * b[j];
-		while(sz(res)>n){
-			rep(j,0,n) res.end()[-j-2] += res.back() * tr[j];
-			res.pop_back();
+			re[i + j] += a[i] * b[j];
+		while(sz(re)>n){
+			rep(j,0,n) re.end()[-j-2] += re.back() * tr[j];
+			re.pop_back();
 		}
-		return res;
+		return re;
 #else
 		let r=conv(move(a), move(b));
 		return polymod(r, m, f(r));
@@ -50,7 +50,7 @@ Mod linearRec(vm S, vm tr, ll p) {
 	vm pol{1}, e{0, 1};
 	for (; p; p>>=1, e=combine(e, e)) if (p&1) pol = combine(move(pol), e);
 
-	Mod res = 0;
-	rep(i,0,sz(pol)) res += pol[i] * S[i];
-	return res;
+	Mod re = 0;
+	rep(i,0,sz(pol)) re += pol[i] * S[i];
+	return re;
 }

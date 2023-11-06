@@ -17,7 +17,7 @@ int calc() { ... } // compute current answer
 
 vi mo(vector<pii> Q) {
 	int L = 0, R = 0, blk = 350; // ~N/sqrt(Q)
-	vi s(sz(Q)), res = s;
+	vi s(sz(Q)), re = s;
 #define K(x) pii(x.first/blk, x.second ^ -(x.first/blk & 1))
 	iota(all(s), 0);
 	sort(all(s), [&](int s, int t){ return K(Q[s]) < K(Q[t]); });
@@ -27,14 +27,14 @@ vi mo(vector<pii> Q) {
 		while (R < q.second) add(R++, 1);
 		while (L < q.first) del(L++, 0);
 		while (R > q.second) del(--R, 1);
-		res[qi] = calc();
+		re[qi] = calc();
 	}
-	return res;
+	return re;
 }
 
 vi moTree(vector<array<int, 2>> Q, vector<vi>& ed, int root=0){
 	int N = sz(ed), pos[2] = {}, blk = 350; // ~N/sqrt(Q)
-	vi s(sz(Q)), res = s, I(N), L(N), R(N), in(N), par(N);
+	vi s(sz(Q)), re = s, I(N), L(N), R(N), in(N), par(N);
 	add(0, 0), in[0] = 1;
 	auto dfs = [&](int x, int p, int dep, auto& f) -> void {
 		par[x] = p;
@@ -56,7 +56,7 @@ vi moTree(vector<array<int, 2>> Q, vector<vi>& ed, int root=0){
 			I[i++] = b, b = par[b];
 		while (a != b) step(par[a]);
 		while (i--) step(I[i]);
-		if (end) res[qi] = calc();
+		if (end) re[qi] = calc();
 	}
-	return res;
+	return re;
 }

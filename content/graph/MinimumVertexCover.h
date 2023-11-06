@@ -13,7 +13,7 @@
 
 vi cover(vector<vi>& g, int n, int m) {
 	vi match(m, -1);
-	int res = dfsMatching(g, match);
+	int re = dfsMatching(g, match);
 	vector<bool> lfound(n, true), seen(m);
 	for (int it : match) if (it != -1) lfound[it] = false;
 	vi q, cover;
@@ -28,6 +28,6 @@ vi cover(vector<vi>& g, int n, int m) {
 	}
 	rep(i,0,n) if (!lfound[i]) cover.push_back(i);
 	rep(i,0,m) if (seen[i]) cover.push_back(n+i);
-	assert(sz(cover) == res);
+	assert(sz(cover) == re);
 	return cover;
 }

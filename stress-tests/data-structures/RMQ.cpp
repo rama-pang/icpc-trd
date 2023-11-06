@@ -10,7 +10,7 @@ int main() {
 		random_shuffle(all(v));
 		RMQ<int> rmq(v);
 		rep(i,0,N) rep(j,i+1,N+1) {
-			int m = rmq.query(i,j);
+			int m = rmq(i,j);
 			int n = 1 << 29;
 			rep(k,i,j) n = min(n, v[k]);
 			assert(n == m);

@@ -17,7 +17,7 @@
 typedef Point<double> P;
 double rat(P a, P b) { return sgn(b.x) ? a.x/b.x : a.y/b.y; }
 double polyUnion(vector<vector<P>>& poly) {
-	double ret = 0;
+	double re = 0;
 	rep(i,0,sz(poly)) rep(v,0,sz(poly[i])) {
 		P A = poly[i][v], B = poly[i][(v + 1) % sz(poly[i])];
 		vector<pair<double, int>> segs = {{0, 0}, {1, 0}};
@@ -43,7 +43,7 @@ double polyUnion(vector<vector<P>>& poly) {
 			if (!cnt) sum += segs[j].first - segs[j - 1].first;
 			cnt += segs[j].second;
 		}
-		ret += A.cross(B) * sum;
+		re += A.cross(B) * sum;
 	}
-	return ret / 2;
+	return re / 2;
 }

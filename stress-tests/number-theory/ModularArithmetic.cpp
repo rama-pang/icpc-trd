@@ -1,5 +1,6 @@
 #include "../utilities/template.h"
 
+let mod=1000000007;
 #include "../../content/number-theory/ModularArithmetic.h"
 
 int main() {

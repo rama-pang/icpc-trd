@@ -98,23 +98,23 @@ Mod linearRec2D(let& table, auto tr, auto row, auto col){
 	reverse(all(tr));
 
 	auto combine = [&](vector<vm> a, vector<vm> b) {
-		vector<vm> res(n*2-1, vm(k));
+		vector<vm> re(n*2-1, vm(k));
 		for(auto& x: a) x.resize(k), ntt(x);
 		for(auto& x: b) x.resize(k), ntt(x);
-		rep(i,0,sz(a)) rep(j,0,sz(b)) rep(l, 0, k) res[i + j][l]+= a[i][l]* b[j][l];
-		while(sz(res)>n){
-			auto m=move(res.back()); res.pop_back();
+		rep(i,0,sz(a)) rep(j,0,sz(b)) rep(l, 0, k) re[i + j][l]+= a[i][l]* b[j][l];
+		while(sz(re)>n){
+			auto m=move(re.back()); re.pop_back();
 			intt(m); fill(col+1+all(m), 0); ntt(m);
-			rep(j,0,n) rep(l, 0, k) res.end()[-j-1][l]+= m[l]* tr[j][l];
+			rep(j,0,n) rep(l, 0, k) re.end()[-j-1][l]+= m[l]* tr[j][l];
 		}
-		for(auto& row: res) intt(row), row.resize(col+1);
-		return res;
+		for(auto& row: re) intt(row), row.resize(col+1);
+		return re;
 	};
 
 	vector<vm> pol{{1}}, e{{0}, {1}};
 	for (auto p=row; p; p>>=1, e=combine(e, e)) if (p&1) pol = combine(move(pol), e);
 
-	Mod res = 0;
-	rep(i,0,sz(pol)) rep(j, 0, col+1) res += pol[i][j] * table[i][col-j];
-	return res;
+	Mod re = 0;
+	rep(i,0,sz(pol)) rep(j, 0, col+1) re += pol[i][j] * table[i][col-j];
+	return re;
 }

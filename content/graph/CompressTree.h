@@ -28,10 +28,10 @@ vpi compressTree(LCA& lca, const vi& subset) {
 	sort(all(li), cmp);
 	li.erase(unique(all(li)), li.end());
 	rep(i,0,sz(li)) rev[li[i]] = i;
-	vpi ret = {pii(0, li[0])};
+	vpi re = {pii(0, li[0])};
 	rep(i,0,sz(li)-1) {
 		int a = li[i], b = li[i+1];
-		ret.emplace_back(rev[lca.lca(a, b)], b);
+		re.emplace_back(rev[lca.lca(a, b)], b);
 	}
-	return ret;
+	return re;
 }

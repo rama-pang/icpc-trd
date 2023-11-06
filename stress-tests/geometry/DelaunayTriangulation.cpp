@@ -18,12 +18,12 @@ int main() {
 		}
 
 		auto coc = [&](int i, int j, int k, int l) {
-			double a = (ps[i] - ps[j]).dist();
-			double b = (ps[j] - ps[k]).dist();
-			double c = (ps[k] - ps[l]).dist();
-			double d = (ps[l] - ps[i]).dist();
-			double e = (ps[i] - ps[k]).dist();
-			double f = (ps[j] - ps[l]).dist();
+			double a = (ps[i] - ps[j]).len();
+			double b = (ps[j] - ps[k]).len();
+			double c = (ps[k] - ps[l]).len();
+			double d = (ps[l] - ps[i]).len();
+			double e = (ps[i] - ps[k]).len();
+			double f = (ps[j] - ps[l]).len();
 			double q = a*c + b*d - e*f;
 			return abs(q) < 1e-4;
 		};
@@ -59,7 +59,7 @@ int main() {
 			P c = ccCenter(ps[i], ps[j], ps[k]);
 			double ra = ccRadius(ps[i], ps[j], ps[k]);
 			rep(l,0,N) {
-				if ((ps[l] - c).dist() < ra - 1e-5) fail();
+				if ((ps[l] - c).len() < ra - 1e-5) fail();
 			}
 		});
 		if (N >= 3) rep(i,0,N) if (!used[i]) fail();

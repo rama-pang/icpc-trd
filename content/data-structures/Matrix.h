@@ -22,9 +22,9 @@ template<class T, int N> struct Matrix {
 		return a;
 	}
 	vector<T> operator*(const vector<T>& vec) const {
-		vector<T> ret(N);
-		rep(i,0,N) rep(j,0,N) ret[i] += d[i][j] * vec[j];
-		return ret;
+		vector<T> re(N);
+		rep(i,0,N) rep(j,0,N) re[i] += d[i][j] * vec[j];
+		return re;
 	}
 	M operator^(ll p) const {
 		assert(p >= 0);

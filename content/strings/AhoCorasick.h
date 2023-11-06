@@ -62,24 +62,24 @@ struct AhoCorasick {
 	}
 	vi find(string word) {
 		int n = 0;
-		vi res; // ll count = 0;
+		vi re; // ll count = 0;
 		for (char c : word) {
 			n = N[n].next[c - first];
-			res.push_back(N[n].end);
+			re.push_back(N[n].end);
 			// count += N[n].nmatches;
 		}
-		return res;
+		return re;
 	}
 	vector<vi> findAll(vector<string>& pat, string word) {
 		vi r = find(word);
-		vector<vi> res(sz(word));
+		vector<vi> re(sz(word));
 		rep(i,0,sz(word)) {
 			int ind = r[i];
 			while (ind != -1) {
-				res[i - sz(pat[ind]) + 1].push_back(ind);
+				re[i - sz(pat[ind]) + 1].push_back(ind);
 				ind = backp[ind];
 			}
 		}
-		return res;
+		return re;
 	}
 };

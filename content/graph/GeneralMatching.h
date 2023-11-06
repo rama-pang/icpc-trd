@@ -33,13 +33,13 @@ vector<pii> generalMatching(int N, vector<pii>& ed) {
 		}
 	} while (matInv(A = mat) != M);
 
-	vi has(M, 1); vector<pii> ret;
+	vi has(M, 1); vector<pii> re;
 	rep(it,0,M/2) {
 		rep(i,0,M) if (has[i])
 			rep(j,i+1,M) if (A[i][j] && mat[i][j]) {
 				fi = i; fj = j; goto done;
 		} assert(0); done:
-		if (fj < N) ret.emplace_back(fi, fj);
+		if (fj < N) re.emplace_back(fi, fj);
 		has[fi] = has[fj] = 0;
 		rep(sw,0,2) {
 			ll a = modpow(A[fi][fj], mod-2);
@@ -50,5 +50,5 @@ vector<pii> generalMatching(int N, vector<pii>& ed) {
 			swap(fi,fj);
 		}
 	}
-	return ret;
+	return re;
 }

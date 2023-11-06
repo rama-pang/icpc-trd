@@ -35,7 +35,7 @@ typedef __m256i mi;
 // andnot, abs, min, max, sign(1,x), cmp(gt|eq), unpack(lo|hi)
 
 int sumi32(mi m) { union {int v[8]; mi m;} u; u.m = m;
-	int ret = 0; rep(i,0,8) ret += u.v[i]; return ret; }
+	int re = 0; rep(i,0,8) re += u.v[i]; return re; }
 mi zero() { return _mm256_setzero_si256(); }
 mi one() { return _mm256_set1_epi32(-1); }
 bool all_zero(mi m) { return _mm256_testz_si256(m, m); }

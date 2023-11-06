@@ -26,7 +26,7 @@ bool dfs(int a, int L, vector<vi>& g, vi& btoa, vi& A, vi& B) {
 }
 
 int hopcroftKarp(vector<vi>& g, vi& btoa) {
-	int res = 0;
+	int re = 0;
 	vi A(g.size()), B(btoa.size()), cur, next;
 	for (;;) {
 		fill(all(A), 0);
@@ -50,12 +50,12 @@ int hopcroftKarp(vector<vi>& g, vi& btoa) {
 				}
 			}
 			if (islast) break;
-			if (next.empty()) return res;
+			if (next.empty()) return re;
 			for (int a : next) A[a] = lay;
 			cur.swap(next);
 		}
 		/// Use DFS to scan for augmenting paths.
 		rep(a,0,sz(g))
-			res += dfs(a, 0, g, btoa, A, B);
+			re += dfs(a, 0, g, btoa, A, B);
 	}
 }

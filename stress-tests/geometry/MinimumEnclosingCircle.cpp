@@ -17,7 +17,7 @@ int main() {
 		double rad = pa.second;
 		double maxDist = 0;
 		for(auto &p: ps) {
-			maxDist = max(maxDist, (p - mid).dist());
+			maxDist = max(maxDist, (p - mid).len());
 		}
 
 		assert(abs(maxDist - rad) < 1e-6);
@@ -25,7 +25,7 @@ int main() {
 		rep(it2,0,50) {
 			P q2 = mid - P(0, 1e-6).rotate(it2);
 			for(auto &p: ps) {
-				if((p - q2).dist() > rad - 1e-7) goto fail;
+				if((p - q2).len() > rad - 1e-7) goto fail;
 			}
 			assert(0);
 fail:;

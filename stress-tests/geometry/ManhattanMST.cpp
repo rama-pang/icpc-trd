@@ -34,7 +34,7 @@ signed main() {
         for (int i = 0; i < num_pts; ++i) {
             int x = rand() % max_coord - max_coord / 2;
             int y = rand() % max_coord - max_coord / 2;
-            pts.push_back(P(x,y));
+            pts.push_back(P{x,y});
         }
         auto edges = manhattanMST(pts);
         assert(edges.size() <= 4*pts.size());

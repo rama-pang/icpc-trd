@@ -12,7 +12,7 @@
 
 vector<double> polyRoots(Poly p, double xmin, double xmax) {
 	if (sz(p.a) == 2) { return {-p.a[0]/p.a[1]}; }
-	vector<double> ret;
+	vector<double> re;
 	Poly der = p;
 	der.diff();
 	auto dr = polyRoots(der, xmin, xmax);
@@ -28,8 +28,8 @@ vector<double> polyRoots(Poly p, double xmin, double xmax) {
 				if ((f <= 0) ^ sign) l = m;
 				else h = m;
 			}
-			ret.push_back((l + h) / 2);
+			re.push_back((l + h) / 2);
 		}
 	}
-	return ret;
+	return re;
 }

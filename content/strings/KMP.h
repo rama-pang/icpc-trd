@@ -20,8 +20,8 @@ vi pi(const string& s) {
 }
 
 vi match(const string& s, const string& pat) {
-	vi p = pi(pat + '\0' + s), res;
+	vi p = pi(pat + '\0' + s), re;
 	rep(i,sz(p)-sz(s),sz(p))
-		if (p[i] == sz(pat)) res.push_back(i - 2 * sz(pat));
-	return res;
+		if (p[i] == sz(pat)) re.push_back(i - 2 * sz(pat));
+	return re;
 }
