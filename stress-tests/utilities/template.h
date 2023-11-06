@@ -1,6 +1,6 @@
 // copied from contest/template.cpp, for standalone inclusion.
 #if not LOCAL
-#define NDEBUG 1
+//#define NDEBUG 1  // can't do this because many of the tests use assert()
 #endif
 #include <bits/stdc++.h>
 using namespace std;

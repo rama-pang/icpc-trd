@@ -20,7 +20,7 @@ struct A {
 	A(int x, B b) : x(x), b(b) {}
 	A operator+(A o){int y = x+o.x; return{y - (y>=M)*M, b+o.b};}
 	A operator-(A o){int y = x-o.x; return{y + (y< 0)*M, b-o.b};}
-	A operator*(A o) { return {(int)(1LL*x*o.x % M), b*o.b}; }
+	A operator*(A o) { return {int(1LL*x*o.x % M), b*o.b}; }
 	explicit operator ull() { return x ^ (ull) b << 21; }
 	bool operator==(A o) const { return (ull)*this == (ull)o; }
 	bool operator<(A o) const { return (ull)*this < (ull)o; }
