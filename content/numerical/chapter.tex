@@ -30,4 +30,10 @@
 	\kactlimport{FastFourierTransform.h}
 	\kactlimport{FastFourierTransformMod.h}
 	\kactlimport{NumberTheoreticTransform.h}
+	Newton's method: To solve $f(x) = 0$ starting from a root $x$, repeatedly compute
+	$x \leftarrow x - \frac{f(x)}{f'(x)}$.
+	\begin{itemize}
+	  \item For computing $x=1/a$: $f(x) = a-1/x$, iteration: $x \leftarrow x\times (2-a\times x)$.
+	  \item For computing $x=\exp(a)$: $f(x) = \log(x)-a$, iteration: $x \leftarrow x\times (1-\log x+a)$.
+	\end{itemize}
 	\kactlimport{FastSubsetTransform.h}
