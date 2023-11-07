@@ -36,4 +36,7 @@
 	  \item For computing $x=1/a$: $f(x) = a-1/x$, iteration: $x \leftarrow x\times (2-a\times x)$.
 	  \item For computing $x=\exp(a)$: $f(x) = \log(x)-a$, iteration: $x \leftarrow x\times (1-\log x+a)$.
 	\end{itemize}
+\begin{lstlisting}
+vm a=log({1, 2, 3, 4, 5}); // {0, 2, 1, 665496236, 499122177}
+\end{lstlisting}
 	\kactlimport{FastSubsetTransform.h}
