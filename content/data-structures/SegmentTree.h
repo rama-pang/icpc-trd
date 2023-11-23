@@ -30,8 +30,7 @@ struct Tree {
 	}
 	void merge(int x){
 		while (x>>=1) {
-			assert(s[x].lazy==Lazy::none);
-			s[x] = T(s[x*2], s[x*2+1]);
+			assert(s[x].lazy==Lazy::none); s[x] = T(s[x*2], s[x*2+1]);
 		}
 	} // x ∈ [n..2n[
 
@@ -40,8 +39,7 @@ struct Tree {
 		x+=n; push(x); s[x].val = val; merge(x);
 	}
 	T query(int l, int r) {
-		assert(l<r); l+=n; r+=n;
-		push(l); push(r-1);
+		assert(l<r); l+=n; r+=n; push(l); push(r-1);
 		if(l+1==r) return s[l];
 		T x = s[l++], y = s[--r];
 		for(; l<r; l>>=1, r>>=1){
@@ -50,16 +48,12 @@ struct Tree {
 		}
 		return f(x, y);
 	}
-
 	void update(int l, int r, T lazy) {
-		l+=n; r+=n;
-		let u=l, v=r-1;
-		push(u); push(v);
+		l+=n; r+=n; let u=l, v=r-1; push(u); push(v);
 		for(; l<r; l>>=1, r>>=1){
 			if(l&1) s[l++].apply(val);
 			if(r&1) s[--r].apply(val);
 		}
-		push(u); push(v);
-		merge(u); merge(v);
+		push(u); push(v); merge(u); merge(v);
 	}
 };

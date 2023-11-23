@@ -73,20 +73,19 @@ public:
   // if you are adding a bidirectional edge u<->v with weight w into your
   // flow graph, set directed = false (default value is directed = true)
   void add_edge(int u, int v, ll w, ll c, bool directed = true) {
-    if (u == v) return;                          // safeguard: no self loop
-    EL.emplace_back(v, w, 0, c);                 // u->v, cap w, flow 0, cost c
-    AL[u].push_back(EL.size()-1);                // remember this index
-    EL.emplace_back(u, 0, 0, -c);                // back edge
-    AL[v].push_back(EL.size()-1);                // remember this index
-    if (!directed) add_edge(v, u, w, c);         // add again in reverse
+    if (u == v) return;                  // safeguard: no self loop
+    EL.emplace_back(v, w, 0, c);         // u->v, cap w, flow 0, cost c
+    AL[u].push_back(EL.size()-1);        // remember this index
+    EL.emplace_back(u, 0, 0, -c);        // back edge
+    AL[v].push_back(EL.size()-1);        // remember this index
+    if (!directed) add_edge(v, u, w, c); // add again in reverse
   }
 
   pair<ll, ll> mcmf(int s, int t) {
-    ll mf = 0;                                   // mf stands for max_flow
-    while (SPFA(s, t)) {                          // an O(V^2*E) algorithm
-      last.assign(V, 0);                         // important speedup
-      while (ll f = DFS(s, t))                   // exhaust blocking flow
-        mf += f;
+    ll mf = 0;                           // mf stands for max_flow
+    while (SPFA(s, t)) {                 // an O(V^2*E) algorithm
+      last.assign(V, 0);                 // important speedup
+      while (ll f = DFS(s, t)) mf += f;  // exhaust blocking flow
     }
     return {mf, total_cost};
   }
