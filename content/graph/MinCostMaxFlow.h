@@ -1,5 +1,8 @@
-// This code uses new C++17 structured binding
-// use this compiler setting "g++ -O2 -std=gnu++17 {cpp17file}"
+/**
+ * Author: nvmdava
+ * Description: Min-cost max-flow.
+ */
+
 
 // Disclaimer: This code is a hybrid between old CP1-2-3 implementation of
 // Edmonds Karp's algorithm -- re-written in OOP fashion and the fast
