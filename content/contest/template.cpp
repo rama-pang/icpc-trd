@@ -21,14 +21,14 @@ int main() {
 }
 
 // extra
-
-template<class T> struct YComb_{
+template<class T> struct YComb{
 	T f;
-	template<class... Args> auto operator()(Args&&... args)const{
-		return f(ref(*this), forward<Args>(args)...);
+	template<class... A> auto operator()(A&&... a)const{
+		return f(ref(*this), forward<A>(a)...);
 	}
 };
-template<class T> YComb_<T> YComb(T f){ return {move(f)}; }
+//template<class T> YComb_<T> YComb(T f){ return {move(f)}; }
+// if < C++20 use this and add "_" to the struct name above
 
 template <class T>
 auto& operator>>(istream& s, vector<T>& v) {
