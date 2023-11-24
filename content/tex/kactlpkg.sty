@@ -24,6 +24,8 @@
 %\usepackage[hidelinks]{hyperref}        % For clickable table of contents
 
 \usepackage[scaled=0.95]{FiraMono}
+\usepackage{microtype}
+\DisableLigatures{family=tt*}
 
 \csname sys_if_shell_unrestricted:F\endcsname {\errmessage{Please enable shell escape!}}
 
@@ -207,13 +209,14 @@
 \lstset{showstringspaces=false}
 \lstset{breaklines=true}
 \lstset{basicstyle=\footnotesize\ttfamily}
-\lstset{commentstyle=\normalfont\slshape}
+\lstset{commentstyle=\firamonomedium\fontseries{m}\slshape}
 \lstset{literate=
 %{^}{\caret}{1}
 %{~}{\tilde}{1}
 %{\{}{\nicelbrace}{1}
 %{\}}{\nicerbrace}{1}
 {≤}{$\le$}1
+{∈}{$\in$}1
 {≥}{$\ge$}1
 }
 \lstset{emptylines=*1}
