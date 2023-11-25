@@ -1,62 +1,56 @@
 /**
  * Author: rama_pang
- * Description: Suffix automaton. used for multiple pattern matching.
+ * Description: Palindromic automaton. 
  * Status: tested on https://tlx.toki.id/problems/apio-2014/A
  */
 
-class Eertree {
- public:
-  int sz;
-  string S;
-  int suff_max;
-  vector<int> len;
-  vector<int> occ;
-  vector<int> link;
-  vector<vector<int>> to;
+template <int ALPHABET_SIZE = 26>
+struct Eertree {
+  struct Node {
+    int link, length, occ;
+    array<int, ALPHABET_SIZE> nxt;
+    Node() : link(0), length(0), occ(0) { fill(all(nxt), -1); }
+  };
 
-  Eertree()
-      : sz(2),
-        S(),
-        suff_max(1),
-        len(2),
-        occ(2),
-        link(2),
-        to(2, vector<int>(26, -1)) {
-    len[0] = -1, link[0] = 0;
-    len[1] = 0, link[1] = 0;
+  int suff_max;   // maximum palindromic suffix
+  vector<int> s;  // string
+  vector<Node> t;
+  Eertree() {
+    t.resize(2);  // [-1 string, 0 string]
+    t[0].length = -1;
+    suff_max = 1;  // 0 string
   }
+
   int NewNode() {
-    len.emplace_back();
-    occ.emplace_back();
-    link.emplace_back();
-    to.emplace_back(vector<int>(26, -1));
-    return sz++;
+    t.emplace_back();
+    return sz(t) - 1;
   }
-  int Add(char c) {
-    S.push_back(c);
-    int pos = (int)S.size() - 1;
+
+  int Add(int c) {
+    s.push_back(c);
+    int pos = sz(s) - 1;
     int cur = suff_max;
-    while (pos - 1 - len[cur] < 0 || S[pos - 1 - len[cur]] != c) {
-      cur = link[cur];
+    while (pos - 1 - t[cur].length < 0 || s[pos - 1 - t[cur].length] != c) {
+      cur = t[cur].link;
     }
-    if (to[cur][c - 'a'] != -1) {
-      suff_max = to[cur][c - 'a'];
-      occ[suff_max]++;
+    if (t[cur].nxt[c] != -1) {
+      suff_max = t[cur].nxt[c];
+      t[suff_max].occ++;
       return 0;
     }
     suff_max = NewNode();
-    occ[suff_max] = 1;
-    len[suff_max] = len[cur] + 2;
-    to[cur][c - 'a'] = suff_max;
-    if (len[suff_max] == 1) {
-      link[suff_max] = 1;
+    t[suff_max].occ = 1;
+    t[suff_max].length = t[cur].length + 2;
+    t[cur].nxt[c] = suff_max;
+    if (t[suff_max].length == 1) {
+      t[suff_max].link = 1;
       return 1;
     }
-    cur = link[cur];
-    while (pos - 1 - len[cur] < 0 || S[pos - 1 - len[cur]] != c) {
-      cur = link[cur];
+    cur = t[cur].link;
+    while (pos - 1 - t[cur].length < 0 || s[pos - 1 - t[cur].length] != c) {
+      cur = t[cur].link;
     }
-    link[suff_max] = to[cur][c - 'a'];
+    t[suff_max].link = t[cur].nxt[c];
     return 1;
   }
 };
