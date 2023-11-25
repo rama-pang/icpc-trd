@@ -49,7 +49,7 @@ struct dominator_tree {
         int v = find(w);
         dom[w] = sdom[v] == sdom[w] ? sdom[w] : v;
       }
-      if (i > 1) dsu[i] = par[i];
+      if (i) dsu[i] = par[i];
     }
     rep(i, 1, t) {
       if (dom[i] != sdom[i]) dom[i] = dom[dom[i]];
