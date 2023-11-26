@@ -44,7 +44,7 @@ void ntt(vm &a) {
 }
 void intt(vm &a) {
 	let inv = Mod(1)/sz(a);
-	reverse(a.begin()+1, a.end());
+	reverse(1+all(a));
 	for(auto& x: a) x*=inv;
 	ntt(a);
 }

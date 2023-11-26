@@ -12,7 +12,7 @@
    Rounding is safe if $(\sum a_i^2 + \sum b_i^2)\log_2{N} < 9\cdot10^{14}$
    (in practice $10^{16}$; higher for random inputs).
    Otherwise, use NTT/FFTMod.
- * Time: O(N \log N) with $N = |A|+|B|$ ($\tilde 1s$ for $N=2^{22}$)
+ * Time: O(N \log N) with $N = |A|+|B|$ (${\sim} 1s$ for $N=2^{22}$)
  * Status: somewhat tested
  * Details: An in-depth examination of precision for both FFT and FFTMod can be found
  * here (https://github.com/simonlindholm/fft-precision/blob/master/fft-precision.md)
