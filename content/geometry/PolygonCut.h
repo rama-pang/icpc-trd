@@ -3,11 +3,11 @@
  * Date: 2009-03-21
  * License: CC0
  * Source:
- * Description:\\
-\begin{minipage}{75mm}
+ * Description:\\%
+\begin{minipage}{.8\linewidth}
  Returns a vector with the vertices of a polygon with everything to the left of the line going from s to e cut away.
-\end{minipage}
-\begin{minipage}{15mm}
+\end{minipage}%
+\begin{minipage}{.2\linewidth}
 \vspace{-6mm}
 \includegraphics[width=\textwidth]{content/geometry/PolygonCut}
 \vspace{-6mm}

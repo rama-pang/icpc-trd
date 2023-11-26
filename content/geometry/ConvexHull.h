@@ -4,11 +4,11 @@
  * License: Unlicense
  * Source: https://github.com/stjepang/snippets/blob/master/convex_hull.cpp
  * Description:
-\\\begin{minipage}{75mm}
+\\\begin{minipage}{.8\linewidth}
 Returns a vector of the points of the convex hull in counter-clockwise order.
 Points on the edge of the hull between two other points are not considered part of the hull.
-\end{minipage}
-\begin{minipage}{15mm}
+\end{minipage}%
+\begin{minipage}{.2\linewidth}
 \vspace{-6mm}
 \includegraphics[width=\textwidth]{content/geometry/ConvexHull}
 \vspace{-6mm}

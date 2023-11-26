@@ -23,9 +23,12 @@
 \usepackage[normalem]{ulem}
 %\usepackage[hidelinks]{hyperref}        % For clickable table of contents
 
-\usepackage[scaled=0.95]{FiraMono}
+\usepackage{FiraMono}
 \usepackage{microtype}
 \DisableLigatures{family=tt*}
+
+\NewCommandCopy\oldttfamily\ttfamily
+\DeclareRobustCommand{\ttfamily}{\oldttfamily\footnotesize}
 
 \csname sys_if_shell_unrestricted:F\endcsname {\errmessage{Please enable shell escape!}}
 
@@ -46,6 +49,8 @@
 	\def\@unilong{#2}
 	\def\@unilogo{#3}
 }
+
+
 
 \newcommand{\enablecolors}{
 	\lstset{basicstyle=\footnotesize\ttfamily\color{mygreen}}
@@ -315,11 +320,24 @@ def kactlimportinner()->None:
 
 	extra_args=get_arg_str()
 	file_name=get_arg_str()
+	wlog("========" + file_name)
 	sys.argv[1:] = [  "-i", str(Path(T['@kactldir'].estr())/file_name), *extra_args.split()]
 	with io.StringIO() as f:
 		with contextlib.redirect_stdout(f):
 			main()
 		print_TeX(f.getvalue())
+
+@newcommand
+def cheadcontent()->None:
+	# \chead{\immediate\write18{python3 \@kactlbasedir/tex/preprocessor.py --print-header "\splitbotmarks\hdrmark|\botmarks\hdrmark" -o \@builddir/header2.tmp}\immediate\input{\@builddir/header2.tmp}}
+
+	with io.StringIO() as f:
+		print_header(
+				BalancedTokenList(r"\splitbotmarks\hdrmark|\botmarks\hdrmark").expand_x().detokenize(), f)
+		print_TeX(f.getvalue(), end="")
+
+execute(r""" \chead{\cheadcontent} """)
+# override it
 \end{pycodefuzzy}
 
 \else
