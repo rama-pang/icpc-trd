@@ -6,7 +6,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{listings}                   % Source code listings
 \usepackage{framed}                     % Source code listings
-\usepackage[a4paper,landscape,hmargin={0.5cm,0.5cm},vmargin={1.0cm,0.4cm}]{geometry}
+\usepackage[a4paper,landscape,hmargin={0.5cm,0.5cm},vmargin={1.2cm,0.4cm}]{geometry}
 \usepackage{multicol}                   % Split page in multiple columns
 \usepackage{fancyhdr}                   % Fancy headers
 \usepackage{amsbsy, amssymb, amsmath}   % Enable math symbols
@@ -103,6 +103,7 @@
 	\@schapter
 }
 
+
 % Don't add appendices to the Table of Contents
 % Currently, this disables parts of the local TOC for appendices chapters
 \newboolean{appendixmode}
@@ -161,7 +162,7 @@
 \renewcommand{\chaptermark}[1]{\markboth{\emph{ #1}}{}}
 \renewcommand{\cftbeforetoctitleskip}{-45pt}
 \renewcommand{\cftaftertoctitleskip}{10pt}
-\renewcommand{\cftbeforechapskip}{11pt}
+\renewcommand{\cftbeforechapskip}{3pt}
 \renewcommand\cftchapfont{\large\bfseries}
 \renewcommand{\cftdotsep}{4.5}
 
