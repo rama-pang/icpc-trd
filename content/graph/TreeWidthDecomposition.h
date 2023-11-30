@@ -4,7 +4,8 @@
  * treewidth \(\leq 2\), or return false otherwise. The decomposition satisfies:
  * \(\bigcup_i \texttt{bags[i]} = [V]\), 
  * \(\forall u, \{x | u \in \texttt{bags[x]}\}\) is a connected subtree,
- * \(\forall (u, v) \in E \exists x, u, v \in \texttt{bags[x]}\).
+ * \(\forall (u, v) \in E \exists x, u, v \in \texttt{bags[x]}\),
+ * \(|\texttt{bags[x]}|\leq\) treewidth + 1 = 3.
  * Time: O(M \log N)
  */
 

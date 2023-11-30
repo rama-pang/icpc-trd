@@ -1,92 +1,95 @@
 /**
- * Author: nvmdava
- * Description: Min-cost max-flow.
+ * Author: rama_pang
+ * Description: Min-cost max-flow. Note that negative cost cycles are not supported.
+ * Status: Tested on kattis:mincostmaxflow
  */
 
-
-// Disclaimer: This code is a hybrid between old CP1-2-3 implementation of
-// Edmonds Karp's algorithm -- re-written in OOP fashion and the fast
-// Dinic's algorithm implementation by
-// https://github.com/jaehyunp/stanfordacm/blob/master/code/Dinic.cc
-// This code is written in modern C++17 standard
-
-// We replace BFS with SPFA
-
-
-typedef tuple<int, ll, ll, ll> edge;
-typedef vector<ll> vll;
-
-const ll INF = 1e18; // INF = 1e18, not 2^63-1 to avoid overflow
-
-class min_cost_max_flow {
-private:
-  int V;
-  ll total_cost;
-  vector<edge> EL;
-  vector<vi> AL;
-  vll d;
-  vi last, vis;
-
-  bool SPFA(int s, int t) { // SPFA to find augmenting path in residual graph
-    d.assign(V, INF); d[s] = 0; vis[s] = 1;
-    queue<int> q({s});
-    while (!q.empty()) {
-      int u = q.front(); q.pop(); vis[u] = 0;
-      for (auto &idx : AL[u]) {                  // explore neighbors of u
-        auto &[v, cap, flow, cost] = EL[idx];          // stored in EL[idx]
-        if ((cap-flow > 0) && (d[v] > d[u] + cost)) {      // positive residual edge
-          d[v] = d[u]+cost;
-          if(!vis[v]) q.push(v), vis[v] = 1;
+template <typename T>
+struct mcmf {
+  struct edge {
+    int to, rev;
+    T cap, cost;
+  };
+  static constexpr T INF = numeric_limits<T>::max() / 4;
+  int n;
+  vector<vector<edge>> adj;
+  vector<T> dist;
+  vector<pair<int, int>> prv;  // (node, reverse edge index)
+  mcmf(int n) : n(n), adj(n), dist(n), prv(n) {}
+  void add_edge(int s, int e, T cap, T cost) {
+    adj[s].push_back({e, sz(adj[e]), cap, cost});
+    adj[e].push_back({s, sz(adj[s]) - 1, 0, -cost});
+  }
+  bool spfa(int src, int sink, int n) {  // note: doesn't check negative cycle
+    fill(all(dist), INF);
+    queue<int> que;
+    vector<bool> inque(n, false);
+    dist[src] = 0;
+    inque[src] = 1;
+    que.push(src);
+    bool ok = 0;
+    while (!que.empty()) {
+      int v = que.front();
+      que.pop();
+      inque[v] = 0;
+      if (v == sink) ok = 1;
+      rep(i, 0, sz(adj[v])) {
+        auto e = adj[v][i];
+        if (e.cap > 0 && dist[e.to] > dist[v] + e.cost) {
+          dist[e.to] = dist[v] + e.cost;
+          prv[e.to] = {v, i};
+          if (!inque[e.to]) {
+            inque[e.to] = 1;
+            que.push(e.to);
+          }
         }
       }
     }
-    return d[t] != INF;                           // has an augmenting path
+    return ok;
   }
-
-  ll DFS(int u, int t, ll f = INF) {             // traverse from s->t
-    if ((u == t) || (f == 0)) return f;
-    vis[u] = 1;
-    for (int &i = last[u]; i < (int)AL[u].size(); ++i) { // from last edge
-      auto &[v, cap, flow, cost] = EL[AL[u][i]];
-      if (!vis[v] && d[v] == d[u]+cost) {                      // in current layer graph
-        if (ll pushed = DFS(v, t, min(f, cap-flow))) {
-      total_cost += pushed * cost;
-          flow += pushed;
-          auto &[rv, rcap, rflow, rcost] = EL[AL[u][i]^1]; // back edge
-          rflow -= pushed;
-          vis[u] = 0;
-          return pushed;
+  bool dijkstra(int src, int sink, int n) {
+    priority_queue<pair<T, int>> pq;
+    vector<T> new_dist(n, INF);
+    new_dist[src] = 0;
+    pq.emplace(0, src);
+    bool ok = 0;
+    while (sz(pq)) {
+      auto [dt, v] = pq.top();
+      dt *= -1;
+      pq.pop();
+      if (new_dist[v] != dt) continue;
+      if (v == sink) ok = 1;
+      rep(i, 0, sz(adj[v])) {
+        auto e = adj[v][i];
+        T new_weight = e.cost + dist[v] - dist[e.to];
+        if (e.cap > 0 && new_dist[e.to] > new_dist[v] + new_weight) {
+          new_dist[e.to] = new_dist[v] + new_weight;
+          prv[e.to] = {v, i};
+          pq.emplace(-new_dist[e.to], e.to);
         }
       }
     }
-    vis[u] = 0;
-    return 0;
+    if (ok) rep(i, 0, n) dist[i] = min(dist[i] + new_dist[i], INF);
+    return ok;
   }
-
-public:
-  min_cost_max_flow(int initialV) : V(initialV), total_cost(0) {
-    EL.clear();
-    AL.assign(V, vi());
-    vis.assign(V, 0);
-  }
-
-  // if you are adding a bidirectional edge u<->v with weight w into your
-  // flow graph, set directed = false (default value is directed = true)
-  void add_edge(int u, int v, ll w, ll c, bool directed = true) {
-    if (u == v) return;                  // safeguard: no self loop
-    EL.emplace_back(v, w, 0, c);         // u->v, cap w, flow 0, cost c
-    AL[u].push_back(EL.size()-1);        // remember this index
-    EL.emplace_back(u, 0, 0, -c);        // back edge
-    AL[v].push_back(EL.size()-1);        // remember this index
-    if (!directed) add_edge(v, u, w, c); // add again in reverse
-  }
-
-  pair<ll, ll> mcmf(int s, int t) {
-    ll mf = 0;                           // mf stands for max_flow
-    while (SPFA(s, t)) {                 // an O(V^2*E) algorithm
-      last.assign(V, 0);                 // important speedup
-      while (ll f = DFS(s, t)) mf += f;  // exhaust blocking flow
+  pair<T, T> costflow(int src, int sink) {
+    T cost = 0, flow = 0;
+    // spfa(src, sink, n); // uncomment if costs are negative
+    while (dijkstra(src, sink, n)) {
+      T cap = INF;
+      for (int to = sink; to != src; to = prv[to].first) {
+        auto [x, i] = prv[to];
+        cap = min(cap, adj[x][i].cap);
+      }
+      cost += cap * (dist[sink] - dist[src]);
+      flow += cap;
+      for (int to = sink; to != src; to = prv[to].first) {
+        auto [x, i] = prv[to];
+        int rev = adj[x][i].rev;
+        adj[x][i].cap -= cap;
+        adj[to][rev].cap += cap;
+      }
     }
-    return {mf, total_cost};
+    return {cost, flow};
   }
 };
