@@ -26,7 +26,7 @@ struct Point {
 	T cross(P a, P b) const { return (a-*this).cross(b-*this); }
 	tuple<bool, T, T> decompose(P a, P b) const {
 		let d=a.cross(b); if(d==0) return {};
-		return {a.cross(*this)/d, cross(b)/d};
+		return {true, cross(b)/d, a.cross(*this)/d};
 	}
 	T norm() const { return x*x + y*y; }
 	double len() const { return sqrt(norm()); }

@@ -34,7 +34,7 @@ struct Tree {
 		}
 	} // x ∈ [n..2n[
 
-	void build() { down(p, n) s[p] = f(s[p*2], s[p*2+1]); }
+	void build() { down(p, n) s[p] = T(s[p*2], s[p*2+1]); }
 	void update(int x, T val) {
 		x+=n; push(x); s[x].val = val; merge(x);
 	}
@@ -43,10 +43,10 @@ struct Tree {
 		if(l+1==r) return s[l];
 		T x = s[l++], y = s[--r];
 		for(; l<r; l>>=1, r>>=1){
-			if (l&1) x = f(x, s[l++]);
-			if (r&1) y = f(s[--r], y);
+			if (l&1) x = T(x, s[l++]);
+			if (r&1) y = T(s[--r], y);
 		}
-		return f(x, y);
+		return T(x, y);
 	}
 	void update(int l, int r, T lazy) {
 		l+=n; r+=n; let u=l, v=r-1; push(u); push(v);
