@@ -2,69 +2,68 @@
  * Author: Simon Lindholm
  * Date: 2016-10-08
  * License: CC0
- * Source: me
+ * Source: IvanRenison
  * Description: Segment tree with ability to add or set values of large intervals, and compute max of intervals.
  * Can be changed to other things.
  * Use with a bump allocator for better performance, and SmallPtr or implicit indices to save memory.
- * Note that the type of val must handle multiple values, and Op must be able to act on a collection.
  * Time: O(\log N).
  * Usage: Node* tr = new Node(v, 0, sz(v));
- * Status: stress-tested a bit
+ * Status: stress-tested a bit, https://judge.yosupo.jp/submission/186354
  */
 #pragma once
 
 #include "../various/BumpAllocator.h"
 
 const int inf = 1e9;
-struct Op { int set=inf, add=0; }; // in this example set is applied first, then add
-Op const Identity {};
-Op operator*(Op a, Op b){
-	if(a.set==inf) return b.add+=a.add, b;
-	return a;
-}
-int operator*(Op mod, int val){
-	if(mod.set!=inf){val=mod.set;} return mod.add+val;
-}
-#define mergeVal max
-let emptyVal=-inf;  // * identity of mergeVal
 struct Node {
+	using T = int; // data type
+	struct L { int mset, madd; }; // lazy type
+	const T tneut = -inf;     // neutral elements
+	const L lneut = {inf, 0};
+	T f (T a, T b) { return max(a, b); } // (any associative fn)
+	T apply (T a, L b) {
+		return b.mset != inf ? b.mset + b.madd : a + b.madd;
+	} // Apply lazy to data
+	L comb(L a, L b) {
+		if (b.mset != inf) return b;
+		return {a.mset, a.madd + b.madd};
+	} // Combine lazy (a is old, b is new)
+
 	Node *l = 0, *r = 0;
-	int lo, hi;
-	Op mod=Identity; int val = emptyVal;
-	Node(int lo,int hi):lo(lo),hi(hi){} // Large empty interval
-	Node(vi& v, int lo, int hi) : lo(lo), hi(hi) { // Initialize from segment of v
+	int lo, hi; T val = tneut; L lazy = lneut;
+	Node(int lo,int hi):lo(lo),hi(hi){}//Large interval of tneut
+	Node(vector<T>& v, int lo, int hi) : lo(lo), hi(hi) {
 		if (lo + 1 < hi) {
 			int mid = lo + (hi - lo)/2;
 			l = new Node(v, lo, mid); r = new Node(v, mid, hi);
-			val = mergeVal(l->val, r->val);
-		} else val = v[lo]; // * set default value
+			val = f(l->val, r->val);
+		}
+		else val = v[lo];
 	}
-	int query(int L, int R) {
-		if (R <= lo || hi <= L) return emptyVal;
-		if (L <= lo && hi <= R) return val;
+	T query(int Le, int Ri) {
+		if (Ri <= lo || hi <= Le) return tneut;
+		if (Le <= lo && hi <= Ri) return apply(val, lazy);
 		push();
-		return mergeVal(l->query(L, R), r->query(L, R));
+		return f(l->query(Le, Ri), r->query(Le, Ri));
 	}
-	void op(int L, int R, Op x) {
-		if (R <= lo || hi <= L) return;
-		if (L <= lo && hi <= R) mod = x * mod, val = x * val;
+	void upd(int Le, int Ri, L x) {
+		if (Ri <= lo || hi <= Le) return;
+		if (Le <= lo && hi <= Ri) lazy = comb(lazy, x);
 		else {
-			push(), l->op(L, R, x), r->op(L, R, x);
-			val = mergeVal(l->val, r->val);
+			push(), l->upd(Le, Ri, x), r->upd(Le, Ri, x);
+			val = f(l->query(lo, hi), r->query(lo, hi));
 		}
 	}
-	void set(int L, int R, int x) {
-		op(L, R, Op{.set=x, .add=0});
-	}
-	void add(int L, int R, int x) {
-		op(L, R, Op{.set=inf, .add=x});
-	}
+	void set(int Le, int Ri, int x) { upd(Le, Ri, {x, 0}); }
+	void add(int Le, int Ri, int x) { upd(Le, Ri, {inf, x}); }
 	void push() {
 		if (!l) {
 			int mid = lo + (hi - lo)/2;
-			l = new Node(lo, mid); r = new Node(mid, hi);
+			l = new Node(lo, mid), r = new Node(mid, hi);
 		}
-		//if (mod != inf)
-		l->op(lo,hi,mod), r->op(lo,hi,mod), mod = Identity;
+		l->lazy = comb(l->lazy, lazy);
+		r->lazy = comb(r->lazy, lazy);
+		lazy = lneut;
+		val = f(l->query(lo, hi), r->query(lo, hi));
 	}
 };
