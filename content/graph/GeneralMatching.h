@@ -10,44 +10,80 @@
  */
 #pragma once
 
-#include "../numerical/MatrixInverse-mod.h"
+int matInv(vector<vector<Mod>>& A) {
+	int n = sz(A); vi col(n);
+	vector<vector<Mod>> tmp(n, vector<Mod>(n));
+	rep(i,0,n) tmp[i][i] = 1, col[i] = i;
 
-vector<pii> generalMatching(int N, vector<pii>& ed) {
-	vector<vector<ll>> mat(N, vector<ll>(N)), A;
-	for (pii pa : ed) {
-		int a = pa.first, b = pa.second, r = rand() % mod;
-		mat[a][b] = r, mat[b][a] = (mod - r) % mod;
+	rep(i,0,n) {
+		int r = i, c = i;
+		rep(j,i,n) rep(k,i,n) if (A[j][k] != 0) {
+      r = j, c = k;
+      break;
+    }    
+		if (A[r][c] == 0) return i;
+		A[i].swap(A[r]), tmp[i].swap(tmp[r]);
+		rep(j,0,n) swap(A[j][i], A[j][c]), swap(tmp[j][i], tmp[j][c]);
+		swap(col[i], col[c]);
+		Mod v = A[i][i].inv();
+		rep(j,i+1,n) {
+			Mod f = A[j][i] * v;
+			A[j][i] = 0;
+			rep(k,i+1,n) A[j][k] -= f*A[i][k];
+			rep(k,0,n) tmp[j][k] -= f*tmp[i][k];
+		}
+		rep(j,i+1,n) A[i][j] *= v;
+		rep(j,0,n) tmp[i][j] *= v;
+		A[i][i] = 1;
 	}
 
-	int r = matInv(A = mat), M = 2*N - r, fi, fj;
-	assert(r % 2 == 0);
+	/// forget A at this point, just eliminate tmp backward
+	down(i, n) rep(j,0,i) {
+		Mod v = A[j][i];
+		rep(k,0,n) tmp[j][k] -= v*tmp[i][k];
+	}
 
-	if (M != N) do {
-		mat.resize(M, vector<ll>(M));
-		rep(i,0,N) {
-			mat[i].resize(M);
-			rep(j,N,M) {
-				int r = rand() % mod;
-				mat[i][j] = r, mat[j][i] = (mod - r) % mod;
+	rep(i,0,n) rep(j,0,n) A[col[i]][col[j]] = tmp[i][j];
+	return n;
+}
+
+vector<pii> generalMatching(int n, const vector<pii> &ed) {
+	vector<vector<Mod>> mat(n, vector<Mod>(n)), A;
+	for (auto [a, b] : ed) {
+		Mod r = rnd();
+		mat[a][b] = r, mat[b][a] = -r;
+	}
+	int r = matInv(A = mat), m = 2 * n - r, fi, fj;
+	assert(r % 2 == 0); // return r/2; // size of matching
+
+	if (m != n) do {
+		mat.resize(m, vector<Mod>(m));
+		rep(i,0,n) {
+			mat[i].resize(m);
+			rep(j,n,m) {
+				Mod r = rnd();
+				mat[i][j] = r, mat[j][i] = -r;
 			}
 		}
-	} while (matInv(A = mat) != M);
+	} while (matInv(A = mat) != m);
 
-	vi has(M, 1); vector<pii> re;
-	rep(it,0,M/2) {
-		rep(i,0,M) if (has[i])
-			rep(j,i+1,M) if (A[i][j] && mat[i][j]) {
-				fi = i; fj = j; goto done;
-		} assert(0); done:
-		if (fj < N) re.emplace_back(fi, fj);
-		has[fi] = has[fj] = 0;
-		rep(sw,0,2) {
-			ll a = modpow(A[fi][fj], mod-2);
-			rep(i,0,M) if (has[i] && A[i][fj]) {
-				ll b = A[i][fj] * a % mod;
-				rep(j,0,M) A[i][j] = (A[i][j] - A[fi][j] * b) % mod;
+	vi has(m, 1);
+	vector<pii> re;
+	rep(it, 0, m/2) {
+		rep(i, 0, m) if (has[i]) {
+			rep(j, i+1, m) if (A[i][j] != 0 && mat[i][j] != 0) {
+				fi = i, fj = j; goto done;
+			} assert(0); done:
+			if (fj < n) re.emplace_back(fi, fj);
+			has[fi] = has[fj] = 0;
+			rep(sw, 0, 2) {
+				Mod a = A[fi][fj].inv();
+				rep(i, 0, m) if (has[i] && A[i][fj] != 0) {
+					Mod b = A[i][fj] * a;
+					rep(j, 0, m) A[i][j] -= A[fi][j] * b;
+				}
+				swap(fi, fj);
 			}
-			swap(fi,fj);
 		}
 	}
 	return re;
