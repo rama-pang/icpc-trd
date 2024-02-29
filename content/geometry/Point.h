@@ -32,8 +32,8 @@ struct Point {
 	double len() const { return sqrt(norm()); }
 	// angle to x-axis in interval [-pi, pi]
 	double angle() const { return atan2(y, x); }
-	P perp() const { return P{-y, x}; } // rotates +90 degrees
-	// returns point rotated 'a' radians ccw around the origin
+	P perp() const { return P{-y, x}; } // rotates 90 degrees ccw
+	// returns point rotated 'a' radians ccw
 	P rotate(double a) const {
 		return P{x*cos(a)-y*sin(a),x*sin(a)+y*cos(a)}; }
 	friend ostream& operator<<(ostream& os, P p) {
