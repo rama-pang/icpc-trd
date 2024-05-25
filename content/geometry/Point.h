@@ -29,7 +29,7 @@ struct Point {
 		return {true, cross(b)/d, a.cross(*this)/d};
 	}
 	T norm() const { return x*x + y*y; }
-	double len() const { return sqrt(norm()); }
+	auto len() const { return sqrt(norm()); }
 	// angle to x-axis in interval [-pi, pi]
 	double angle() const { return atan2(y, x); }
 	P perp() const { return P{-y, x}; } // rotates 90 degrees ccw

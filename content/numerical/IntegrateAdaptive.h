@@ -23,6 +23,6 @@ d rec(auto& f, d a, d b, d eps, d S) {
 		return T + (T - S) / 15;
 	return rec(f, a, c, eps / 2, S1) + rec(f, c, b, eps / 2, S2);
 }
-d quad(d a, d b, auto f, d eps = 1e-8) {
+d quad(d a, d b, auto const& f, d eps = 1e-8) {
 	return rec(f, a, b, eps, S(a, b));
 }
