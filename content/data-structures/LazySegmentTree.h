@@ -14,56 +14,55 @@
 
 #include "../various/BumpAllocator.h"
 
-const int inf = 1e9;
 struct Node {
-	using T = int; // data type
-	struct L { int mset, madd; }; // lazy type
-	const T tneut = -inf;     // neutral elements
-	const L lneut = {inf, 0};
-	T f (T a, T b) { return max(a, b); } // (any associative fn)
-	T apply (T a, L b) {
-		return b.mset != inf ? b.mset + b.madd : a + b.madd;
-	} // Apply lazy to data
-	L comb(L a, L b) {
-		if (b.mset != inf) return b;
-		return {a.mset, a.madd + b.madd};
-	} // Combine lazy (a is old, b is new)
+  using T = int;  // data type
+  struct L { int mmul, madd; };  // lazy type
+  static inline const T tneut = 0;  // neutral elements
+  static inline const L lneut = {1, 0};
 
-	Node *l = 0, *r = 0;
-	int lo, hi; T val = tneut; L lazy = lneut;
-	Node(int lo,int hi):lo(lo),hi(hi){}//Large interval of tneut
-	Node(vector<T>& v, int lo, int hi) : lo(lo), hi(hi) {
-		if (lo + 1 < hi) {
-			int mid = lo + (hi - lo)/2;
-			l = new Node(v, lo, mid); r = new Node(v, mid, hi);
-			val = f(l->val, r->val);
-		}
-		else val = v[lo];
-	}
-	T query(int Le, int Ri) {
-		if (Ri <= lo || hi <= Le) return tneut;
-		if (Le <= lo && hi <= Ri) return apply(val, lazy);
-		push();
-		return f(l->query(Le, Ri), r->query(Le, Ri));
-	}
-	void upd(int Le, int Ri, L x) {
-		if (Ri <= lo || hi <= Le) return;
-		if (Le <= lo && hi <= Ri) lazy = comb(lazy, x);
-		else {
-			push(), l->upd(Le, Ri, x), r->upd(Le, Ri, x);
-			val = f(l->query(lo, hi), r->query(lo, hi));
-		}
-	}
-	void set(int Le, int Ri, int x) { upd(Le, Ri, {x, 0}); }
-	void add(int Le, int Ri, int x) { upd(Le, Ri, {inf, x}); }
-	void push() {
-		if (!l) {
-			int mid = lo + (hi - lo)/2;
-			l = new Node(lo, mid), r = new Node(mid, hi);
-		}
-		l->lazy = comb(l->lazy, lazy);
-		r->lazy = comb(r->lazy, lazy);
-		lazy = lneut;
-		val = f(l->query(lo, hi), r->query(lo, hi));
-	}
+  T op(T lft, T rgt) { return lft + rgt; }  // Combine data
+  T mapping(L upd, T cur) {                 // Apply lazy to data
+    return cur * upd.mmul + (hi - lo) * upd.madd; }
+  L compose(L upd, L cur) {  // Compose lazy
+    return L{cur.mmul * upd.mmul, cur.madd * upd.mmul + upd.madd }; }
+
+  int lo, hi;  // current range is [lo, hi)
+  unique_ptr<Node> l, r;
+  T val = tneut;
+  L lazy = lneut;
+
+  Node(int lo, int hi) : lo(lo), hi(hi) {}  // Large interval of tneut
+  Node(vector<T>& v, int lo, int hi) : lo(lo), hi(hi) {
+    if (lo + 1 < hi) {
+      int mid = lo + (hi - lo) / 2;
+      l.reset(new Node(v, lo, mid));
+      r.reset(new Node(v, mid, hi));
+      val = op(l->val, r->val);
+    } else val = v[lo];
+  }
+  T query(int lft, int rgt) {  // query [lft, rgt)
+    if (rgt <= lo || hi <= lft) return tneut;
+    if (lft <= lo && hi <= rgt) return mapping(lazy, val);
+    push();
+    return op(l->query(lft, rgt), r->query(lft, rgt));
+  }
+  void upd(int lft, int rgt, L upd) { // update [lft, rgt)
+    if (rgt <= lo || hi <= lft) return;
+    if (lft <= lo && hi <= rgt) lazy = compose(upd, lazy);
+    else {
+      push(), l->upd(lft, rgt, upd), r->upd(lft, rgt, upd);
+      val = op(l->query(lo, hi), r->query(lo, hi));
+    }
+  }
+  void push() {
+    if (!l) {
+      int mid = lo + (hi - lo) / 2;
+      l.reset(new Node(lo, mid));
+      r.reset(new Node(mid, hi));
+    }
+    l->lazy = compose(lazy, l->lazy);
+    r->lazy = compose(lazy, r->lazy);
+    lazy = lneut;
+    val = op(l->query(lo, hi), r->query(lo, hi));
+  }
 };

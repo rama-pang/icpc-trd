@@ -24,7 +24,7 @@ struct RMQ {
 				jump[k][j] = min(jump[k - 1][j], jump[k - 1][j + pw]);
 		}
 	}
-	T operator()(int a, int b) const {
+	T operator()(int a, int b) const { // rmq [a, b)
 		assert(a < b); // or return inf if a == b
 		int dep = 31 ^ __builtin_clz(b - a);
 		return min(jump[dep][a], jump[dep][b - (1 << dep)]);
