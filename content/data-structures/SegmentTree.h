@@ -10,50 +10,58 @@
 #pragma once
 
 struct Tree {
-	struct T{
-		int val; // TODO initial value
-		int lazy;
-		T() {}
-		T(T a, T b){ val=max(a.val, b.val); }
-		void apply(int l){
-			// TODO
-		}
-	};
-	vector<T> s; int n;
-	Tree(int n) : s(2*n), n(n) {}
-	void push(int x){ // x ∈ [n..2n[
-		down(i,31^__builtin_clz(x)){
-			let y=x>>(i+1);
-			rep(c, y*2, y*2+2) s[c].apply(s[y].lazy);
-			s[y].lazy=0; // TODO unit value
-		}
-	}
-	void merge(int x){
-		while (x>>=1) {
-			assert(s[x].lazy==Lazy::none); s[x] = T(s[x*2], s[x*2+1]);
-		}
-	} // x ∈ [n..2n[
+  struct T { Mod val; int cnt; }; // data type
+  struct L { Mod mmul, madd; };  // lazy type
+  static inline const T tneut = {0, 0};  // neutral elements
+  static inline const L lneut = {1, 0};
 
-	void build() { down(p, n) s[p] = T(s[p*2], s[p*2+1]); }
-	void update(int x, T val) {
-		x+=n; push(x); s[x].val = val; merge(x);
-	}
-	T query(int l, int r) {
-		assert(l<r); l+=n; r+=n; push(l); push(r-1);
-		if(l+1==r) return s[l];
-		T x = s[l++], y = s[--r];
-		for(; l<r; l>>=1, r>>=1){
-			if (l&1) x = T(x, s[l++]);
-			if (r&1) y = T(s[--r], y);
-		}
-		return T(x, y);
-	}
-	void update(int l, int r, T lazy) {
-		l+=n; r+=n; let u=l, v=r-1; push(u); push(v);
-		for(; l<r; l>>=1, r>>=1){
-			if(l&1) s[l++].apply(val);
-			if(r&1) s[--r].apply(val);
-		}
-		push(u); push(v); merge(u); merge(v);
-	}
+  T op(T lft, T rgt) {  // Combine data
+    return {lft.val + rgt.val, lft.cnt + rgt.cnt}; }
+  T mapping(L upd, T cur) {  // Apply lazy to data
+    return {cur.val * upd.mmul + cur.cnt * upd.madd, cur.cnt}; }
+  L compose(L upd, L cur) {  // Compose lazy
+    return L{cur.mmul * upd.mmul, cur.madd * upd.mmul + upd.madd }; }
+
+  int n;
+  vector<T> val;
+  vector<L> lazy;
+
+  Tree(int n) : val(2 * n, tneut), lazy(2 * n, lneut), n(n) {}
+  void apply(int i, L upd) {
+    val[i] = mapping(upd, val[i]);
+    lazy[i] = compose(upd, lazy[i]);
+  }
+  void push(int x) {  // x ∈ [n..2n)
+    down(i, 31 ^ __builtin_clz(x)) {
+      let y = x >> (i + 1);
+      rep(c, y * 2, y * 2 + 2) apply(c, lazy[y]);
+      lazy[y] = lneut;
+    }
+  }
+  void merge(int x) {
+    while (x >>= 1) {
+      assert(lazy[x] == lneut); val[x] = op(val[x * 2], val[x * 2 + 1]);
+    }
+  }  // x ∈ [n..2n)
+
+  void build() { down(p, n) val[p] = op(val[p * 2], val[p * 2 + 1]); }
+  void update(int x, T v) { x += n; push(x); val[x] = v; merge(x); }
+  T query(int l, int r) {  // query [l, r)
+    assert(l < r); l += n; r += n; push(l); push(r - 1);
+    if (l + 1 == r) return val[l];
+    T x = val[l++], y = val[--r];
+    for (; l < r; l >>= 1, r >>= 1) {
+      if (l & 1) x = op(x, val[l++]);
+      if (r & 1) y = op(val[--r], y);
+    }
+    return op(x, y);
+  }
+  void update(int l, int r, L upd) {  // update [l, r)
+    l += n; r += n; let u = l, v = r - 1; push(u); push(v);
+    for (; l < r; l >>= 1, r >>= 1) {
+      if (l & 1) apply(l++, upd);
+      if (r & 1) apply(--r, upd);
+    }
+    push(u); push(v); merge(u); merge(v);
+  }
 };
