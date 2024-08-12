@@ -4,12 +4,11 @@
  * License: CC0
  * Source: https://github.com/hoke-t/tamu-kactl/blob/master/content/data-structures/MoQueries.h
  * Description: Answer interval or tree path queries by finding an approximate TSP through the queries,
- * and moving from one query to the next by adding/removing points at the ends.
- * If values are on tree edges, change \texttt{step} to add/remove the edge $(a, c)$ and remove the initial \texttt{add} call (but keep \texttt{in}).
- * You should implement the following functions:
+ * and moving from one query to the next by adding/removing points at the ends. You should implement the following functions:
  * void add(int ind, int end) { ... } // add a[ind] (end = 0 (left) or 1 (right))
  * void del(int ind, int end) { ... } // remove a[ind]
  * int calc() { ... } // compute current answer
+ * If values are on tree edges, change \texttt{step} to add/remove the edge $(a, c)$ and remove the initial \texttt{add} call (but keep \texttt{in}). You should change to add({a, c}, end) and del({a, c}, end).
  * Time: O(N \sqrt Q)
  * Status: stress-tested
  */
@@ -37,7 +36,7 @@ template <class Add, class Del, class Calc>
 vi moTree(vector<array<int, 2>> Q, vector<vi>& ed, int root, Add add, Del del, Calc calc) {
   int N = sz(ed), pos[2] = {}, blk = 350;  // ~N/sqrt(Q)
   vi s(sz(Q)), re = s, I(N), L(N), R(N), in(N), par(N);
-  add(0, 0); in[0] = 1;
+  add(0, 0); /* remove this add if value on edge */ in[0] = 1;
   auto dfs = [&](int x, int p, int dep, auto& f) -> void {
     par[x] = p; L[x] = N;
     if (dep) I[x] = N++;
