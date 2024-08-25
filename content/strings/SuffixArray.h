@@ -1,42 +1,69 @@
 /**
- * Author: 罗穗骞, chilli
- * Date: 2019-04-11
- * License: Unknown
- * Source: Suffix array - a powerful tool for dealing with strings
- * (Chinese IOI National team training paper, 2009)
- * Description: Builds suffix array for a string.
- * \texttt{sa[i]} is the starting index of the suffix which
- * is $i$'th in the sorted suffix array.
- * The returned vector is of size $n+1$, and \texttt{sa[0] = n}.
- * The \texttt{lcp} array contains longest common prefixes for
- * neighbouring strings in the suffix array:
- * \texttt{lcp[i] = lcp(sa[i], sa[i-1])}, \texttt{lcp[0] = 0}.
- * The input string must not contain any zero bytes.
- * Time: O(n \log n)
- * Status: stress-tested
+ * Author: atcoder library
+ * Description: Suffix array in O(n log n) time.
+ * Status: probably tested by atcoder.
  */
 #pragma once
 
-struct SuffixArray {
-	vi sa, lcp;
-	SuffixArray(string& s, int lim=256) { // or basic_string<int>
-		int n = sz(s) + 1, k = 0, a, b;
-		vi x(all(s)+1), y(n), ws(max(n, lim)), rank(n);
-		sa = lcp = y, iota(all(sa), 0);
-		for (int j = 0, p = 0; p < n; j = max(1, j * 2), lim = p) {
-			p = j, iota(all(y), n - j);
-			rep(i,0,n) if (sa[i] >= j) y[p++] = sa[i] - j;
-			fill(all(ws), 0);
-			rep(i,0,n) ws[x[i]]++;
-			rep(i,1,lim) ws[i] += ws[i - 1];
-			for (int i = n; i--;) sa[--ws[x[y[i]]]] = y[i];
-			swap(x, y), p = 1, x[sa[0]] = 0;
-			rep(i,1,n) a = sa[i - 1], b = sa[i], x[b] =
-				(y[a] == y[b] && y[a + j] == y[b + j]) ? p - 1 : p++;
-		}
-		rep(i,1,n) rank[sa[i]] = i;
-		for (int i = 0, j; i < n - 1; lcp[rank[i++]] = k)
-			for (k && k--, j = sa[rank[i] - 1];
-					s[i + k] == s[j + k]; k++);
-	}
+// Given a string `s` of length $n$, it returns the suffix array of `s`.
+// Here, the suffix array `sa` of `s` is a permutation of $0, \cdots, n-1$
+// such that `s[sa[i]..n) < s[sa[i+1]..n)` holds for all $i = 0,1, \cdots ,n-2$.
+vector<int> suffix_array(const vector<int> &s) {
+  let n = sz(s);
+  vector<int> sa(n), rnk = s, tmp(n);
+  iota(all(sa), 0);
+  for (int k = 1; k < n; k *= 2) {
+    auto cmp = [&](int x, int y) {
+      if (rnk[x] != rnk[y]) return rnk[x] < rnk[y];
+      int rx = x + k < n ? rnk[x + k] : -1;
+      int ry = y + k < n ? rnk[y + k] : -1;
+      return rx < ry;
+    };
+    sort(all(sa), cmp);
+    tmp[sa[0]] = 0;
+    rep(i, 1, n) tmp[sa[i]] = tmp[sa[i - 1]] + cmp(sa[i - 1], sa[i]);
+    swap(tmp, rnk);
+  }
+  return sa;
+}
+
+// Given a string `s` of length $n$, it returns the LCP array of `s`.
+// Here, the LCP array of `s` is the array of length $n-1$, such that
+// the $i$-th element is the length of the LCP (Longest Common Prefix)
+// of `s[sa[i]..n)` and `s[sa[i+1]..n)`.
+vector<int> lcp_array(const vector<int> &s, const vector<int> &sa) {
+  int n = sz(s), h = 0;
+  assert(n >= 1);
+  vector<int> rnk(n), lcp(n - 1);
+  rep(i, 0, n) { rnk[sa[i]] = i; }
+  rep(i, 0, n) {
+    if (h > 0) h--;
+    if (rnk[i] == 0) continue;
+    int j = sa[rnk[i] - 1];
+    for (; j + h < n && i + h < n; h++) {
+      if (s[j + h] != s[i + h]) break;
+    }
+    lcp[rnk[i] - 1] = h;
+  }
+  return lcp;
+}
+
+struct LCP {
+  int N;
+  vector<int> sainv;  // len = N
+  RMQ<int> rmq;
+  LCP(const vector<int> s) : N(sz(s)), sainv{}, rmq{{}} {
+    auto sa = suffix_array(s);
+    auto lcp = lcp_array(s, sa);
+    sainv.resize(N);
+    rep(i, 0, N) sainv[sa[i]] = i;
+    rmq = {lcp};
+  }
+  int lcplen(int l1, int l2) const {
+    if (l1 == l2) return N - l1;
+    if (l1 == N or l2 == N) return 0;
+    l1 = sainv[l1], l2 = sainv[l2];
+    if (l1 > l2) swap(l1, l2);
+    return rmq(l1, l2);
+  }
 };
