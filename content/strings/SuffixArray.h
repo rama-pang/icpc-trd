@@ -1,16 +1,24 @@
 /**
  * Author: atcoder library
- * Description: Suffix array in O(n log n) time.
- * Status: probably tested by atcoder.
+ * Description: Suffix array in O(n log n) time (n = 5e5 -> ~200ms in yosupo)
+ *
+ * `suffix\_array`:
+ * Given a string `s` of length n, it returns the suffix array of `s`.
+ * Here, the suffix array `sa` of `s` is a permutation of 0,..,n-1
+ * such that `s[sa[i]..n) < s[sa[i+1]..n)` holds for all i = 0,1,..,n-2.
+ *
+ * `lcp\_array`:
+ * Given a string `s` of length n, it returns the LCP array of `s`.
+ * Here, the LCP array of `s` is the array of length n-1, such that
+ * the i-th element is the length of the LCP (Longest Common Prefix)
+ * of `s[sa[i]..n)` and `s[sa[i+1]..n)`.
+ * Status: probably tested by atcoder, https://judge.yosupo.jp/submission/231082
  */
 #pragma once
 
-// Given a string `s` of length $n$, it returns the suffix array of `s`.
-// Here, the suffix array `sa` of `s` is a permutation of $0, \cdots, n-1$
-// such that `s[sa[i]..n) < s[sa[i+1]..n)` holds for all $i = 0,1, \cdots ,n-2$.
 vector<int> suffix_array(const vector<int> &s) {
   let n = sz(s);
-  vector<int> sa(n), rnk = s, tmp(n);
+  vector<int> sa(n), rnk = s, tmp(n), p(n), c(n);
   iota(all(sa), 0);
   for (int k = 1; k < n; k *= 2) {
     auto cmp = [&](int x, int y) {
@@ -19,18 +27,24 @@ vector<int> suffix_array(const vector<int> &s) {
       int ry = y + k < n ? rnk[y + k] : -1;
       return rx < ry;
     };
-    sort(all(sa), cmp);
+    if (k == 1) {
+      sort(all(sa), cmp);
+    } else { // improve to n log n; can ignore if n log^2 n is sufficient
+      int q = 0;
+      rep(i, n-k, n) p[q++] = i;
+      rep(i, 0, n) if (sa[i] >= k) p[q++] = sa[i] - k;
+      fill(all(c), 0);
+      rep(i, 0, n) c[rnk[i]]++;
+      rep(i, 1, sz(c)) c[i] += c[i-1];
+      down(i, n) sa[--c[rnk[p[i]]]] = p[i];
+    }
     tmp[sa[0]] = 0;
-    rep(i, 1, n) tmp[sa[i]] = tmp[sa[i - 1]] + cmp(sa[i - 1], sa[i]);
+    rep(i, 1, n) tmp[sa[i]] = tmp[sa[i-1]] + cmp(sa[i-1], sa[i]);
     swap(tmp, rnk);
   }
   return sa;
 }
 
-// Given a string `s` of length $n$, it returns the LCP array of `s`.
-// Here, the LCP array of `s` is the array of length $n-1$, such that
-// the $i$-th element is the length of the LCP (Longest Common Prefix)
-// of `s[sa[i]..n)` and `s[sa[i+1]..n)`.
 vector<int> lcp_array(const vector<int> &s, const vector<int> &sa) {
   int n = sz(s), h = 0;
   assert(n >= 1);
