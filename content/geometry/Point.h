@@ -17,10 +17,10 @@ struct Point {
 #define C(O) bool operator O(P p) const { return tie(x,y) O tie(p.x,p.y); }
 	C(<) C(==)
 #undef C
-	P operator+(P p) const { return P{x+p.x, y+p.y}; }
-	P operator-(P p) const { return P{x-p.x, y-p.y}; }
-	P operator*(T d) const { return P{x*d, y*d}; }
-	P operator/(T d) const { return P{x/d, y/d}; }
+	P operator+(P p) const { return {x+p.x, y+p.y}; }
+	P operator-(P p) const { return {x-p.x, y-p.y}; }
+	P operator*(T d) const { return {x*d, y*d}; }
+	P operator/(T d) const { return {x/d, y/d}; }
 	T dot(P p) const { return x*p.x + y*p.y; }
 	T cross(P p) const { return x*p.y - y*p.x; }
 	T cross(P a, P b) const { return (a-*this).cross(b-*this); }
@@ -32,10 +32,10 @@ struct Point {
 	auto len() const { return sqrt(norm()); }
 	// angle to x-axis in interval [-pi, pi]
 	double angle() const { return atan2(y, x); }
-	P perp() const { return P{-y, x}; } // rotates 90 degrees ccw
+	P perp() const { return {-y, x}; } // rotates 90 degrees ccw
 	// returns point rotated 'a' radians ccw
 	P rotate(double a) const {
-		return P{x*cos(a)-y*sin(a),x*sin(a)+y*cos(a)}; }
+		return {x*cos(a)-y*sin(a),x*sin(a)+y*cos(a)}; }
 	friend ostream& operator<<(ostream& os, P p) {
 		return os << "(" << p.x << "," << p.y << ")"; }
 };
