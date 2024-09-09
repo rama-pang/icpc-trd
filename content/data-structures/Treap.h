@@ -14,27 +14,29 @@ struct Node {
 	Node *l = 0, *r = 0;
 	int val, y, c = 1; // val: value stored, y: priority, c: count node in subtree
 	Node(int val) : val(val), y(rand()) {}
-	void recalc();
+	void pull();
+	void push();
 };
 
 int cnt(Node* n) { return n ? n->c : 0; }
-void Node::recalc() { c = cnt(l) + cnt(r) + 1; }
+void Node::pull() { c = cnt(l) + cnt(r) + 1; }
 
 template<class F> void each(Node* n, F f) {
-	if (n) { each(n->l, f); f(n->val); each(n->r, f); }
+	if (n) { n->push(); each(n->l, f); f(n->val); each(n->r, f); }
 }
 
 pair<Node*, Node*> split(Node* n, int k) { // left tree has k nodes
 	if (!n) return {};
+	n->push();
 	if (cnt(n->l) >= k) { // "n->val >= k" for lower_bound(k)
 		auto pa = split(n->l, k);
 		n->l = pa.second;
-		n->recalc();
+		n->pull();
 		return {pa.first, n};
 	} else {
 		auto pa = split(n->r, k - cnt(n->l) - 1); // and just "k"
 		n->r = pa.first;
-		n->recalc();
+		n->pull();
 		return {n, pa.second};
 	}
 }
@@ -42,13 +44,14 @@ pair<Node*, Node*> split(Node* n, int k) { // left tree has k nodes
 Node* merge(Node* l, Node* r) {
 	if (!l) return r;
 	if (!r) return l;
+	l->push(), r->push();
 	if (l->y > r->y) {
 		l->r = merge(l->r, r);
-		l->recalc();
+		l->pull();
 		return l;
 	} else {
 		r->l = merge(l, r->l);
-		r->recalc();
+		r->pull();
 		return r;
 	}
 }

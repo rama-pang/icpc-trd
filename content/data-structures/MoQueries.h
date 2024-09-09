@@ -14,8 +14,7 @@
  */
 #pragma once
 
-template <class Add, class Del, class Calc>
-vi mo(vector<pii> Q, Add add, Del del, Calc calc) {
+vi mo(vector<pii> Q, auto add, auto del, auto calc) {
   int L = 0, R = 0, blk = 350;  // ~N/sqrt(Q)
   vi s(sz(Q)), re = s;
 #define K(x) pii(x.first / blk, x.second ^ -(x.first / blk & 1))
@@ -32,8 +31,7 @@ vi mo(vector<pii> Q, Add add, Del del, Calc calc) {
   return re;
 }
 
-template <class Add, class Del, class Calc>
-vi moTree(vector<array<int, 2>> Q, vector<vi>& ed, int root, Add add, Del del, Calc calc) {
+vi moTree(vector<array<int, 2>> Q, vector<vi>& ed, int root, auto add, auto del, auto calc) {
   int N = sz(ed), pos[2] = {}, blk = 350;  // ~N/sqrt(Q)
   vi s(sz(Q)), re = s, I(N), L(N), R(N), in(N), par(N);
   add(0, 0); /* remove this add if value on edge */ in[0] = 1;

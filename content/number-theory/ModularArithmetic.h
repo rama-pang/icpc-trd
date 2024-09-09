@@ -20,28 +20,22 @@ struct Mod {
 	Mod operator-() const { return 0-*this; }
 	void operator*=(Mod b) { x=int(ll(x) * b.x % mod); }
 	explicit operator int() const{return x;}
-		
 	[[nodiscard]] Mod pow(auto p) const {
 		assert(p>=0);
 		Mod a=*this, ans = 1;
 		for (; p; p >>= 1, a *= a) if (p&1) ans *= a;
 		return ans;
 	}
-
 	[[nodiscard]] Mod inv() const {
 		assert(x); return pow(mod-2);
 		//ll z, y, g = euclid(mod, x, z, y); assert(g == 1); return int(y);
 	}
 	void operator/=(Mod b) { *this *= b.inv(); }
-
+	auto operator<=>(const Mod&)const=default;
 	friend auto& operator<<(ostream& s, Mod x){
 		return s<<x.x-mod*(x>mod/2)<<'_';
 	}
-
 #define A(O) [[nodiscard]] friend Mod operator O(Mod a, Mod b) { a O##= b; return a; }
 	A(+) A(-) A(*) A(/)
 #undef A
-#define C(O) [[nodiscard]] bool operator O(Mod b) const { return x O b.x; }
-	C(==) C(!=) C(<) C(>) C(<=) C(>=)
-#undef C
 };
