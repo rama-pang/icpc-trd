@@ -15,7 +15,7 @@ struct Tree {
   vector<T> val;
   vector<L> lazy;
 
-  Tree(int n) : val(2 * n, tneut()), lazy(2 * n, lneut()), n(n) {}
+  Tree(int n) : n(n), val(2 * n, tneut()), lazy(2 * n, lneut()) {}
   void apply(int i, L upd) {
     val[i] = mapping(upd, val[i]);
     lazy[i] = compose(upd, lazy[i]);
