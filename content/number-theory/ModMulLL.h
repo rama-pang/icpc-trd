@@ -7,9 +7,9 @@
  * Time: O(1) for \texttt{modmul}, O(\log b) for \texttt{modpow}
  * Status: stress-tested, proven correct
  * Details:
- * This runs ~2x faster than the naive (__int128_t)a * b % M.
+ * This runs ~2x faster than the naive (__int128_t)a * b % m.
  * A proof of correctness is in doc/modmul-proof.tex. An earlier version of the proof,
- * from when the code used a * b / (long double)M, is in doc/modmul-proof.md.
+ * from when the code used a * b / (long double)m, is in doc/modmul-proof.md.
  * The proof assumes that long doubles are implemented as x87 80-bit floats; if they
  * are 64-bit, as on e.g. MSVC, the implementation is only valid for
  * $0 \le a, b \le c < 2^{52} \approx 4.5 \cdot 10^{15}$.
@@ -17,13 +17,13 @@
 #pragma once
 
 typedef unsigned long long ull;
-ull modmul(ull a, ull b, ull M) {
-	ll re = a * b - M * ull(1.L / M * a * b);
-	return re + M * (re < 0) - M * (re >= (ll)M);
+ull modmul(ull a, ull b, ull m) {
+	ll re = a * b - m * ull(1.L / m * a * b);
+	return re + m * (re < 0) - m * (re >= (ll)m);
 }
-ull modpow(ull b, ull e, ull mod) {
-	ull ans = 1;
-	for (; e; b = modmul(b, b, mod), e /= 2)
-		if (e & 1) ans = modmul(ans, b, mod);
-	return ans;
+ull modpow(ull b, ull e, ull m) {
+	ull re = 1;
+	for (; e; b = modmul(b, b, m), e >>= 1)
+		if (e & 1) re = modmul(re, b, m);
+	return re;
 }

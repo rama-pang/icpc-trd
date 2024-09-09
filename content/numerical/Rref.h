@@ -17,8 +17,8 @@ void rref(auto& a){
 #if RREFFINITEFIELD
 		rep(row, fix, sz(a)) if(a[row][col]!=0)
 #else
-		let row=int(max_element(a.begin()+fix, a.end(), [&](let& x, let& y){return abs(x[col])<abs(y[col]);})-a.begin());
-		if(row<sz(a) and abs(a[row][col])>epsilon)
+		let row=int(max_element(fix+all(a), [&](let& x, let& y){return abs(x[col])<abs(y[col]);})-begin(a));
+		if(row<sz(a) and abs(a[row][col])>eps)
 #endif
 		{
 			swap(a[row], a[fix]);
