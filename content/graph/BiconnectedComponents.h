@@ -23,8 +23,7 @@
 vi num, st;
 vector<vector<pii>> ed;
 int Time;
-template<class F>
-int dfs(int at, int par, F& f) {
+int dfs(int at, int par, auto& f) {
 	int me = num[at] = ++Time, e, y, top = me;
 	for (auto pa : ed[at]) if (pa.second != par) {
 		tie(y, e) = pa;
@@ -47,9 +46,7 @@ int dfs(int at, int par, F& f) {
 	}
 	return top;
 }
-
-template<class F>
-void bicomps(F f) {
+void bicomps(auto f) {
 	num.assign(sz(ed), 0);
 	rep(i,0,sz(ed)) if (!num[i]) dfs(i, -1, f);
 }

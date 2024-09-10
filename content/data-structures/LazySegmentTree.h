@@ -20,7 +20,6 @@ struct Node {
   unique_ptr<Node> l, r;
   T val = tneut();
   L lazy = lneut();
-
   Node(int lo, int hi) : lo(lo), hi(hi) {}  // Large interval of tneut
   Node(vector<T>& v, int lo, int hi) : lo(lo), hi(hi) {
     if (lo + 1 < hi) {
@@ -55,7 +54,6 @@ struct Node {
     lazy = lneut(), val = op(l->query(lo, hi), r->query(lo, hi));
   }
 };
-
 struct T { Mod val; int cnt; }; // data type
 struct L { Mod mmul, madd; };  // lazy type
 T tneut() { return {0, 0}; }

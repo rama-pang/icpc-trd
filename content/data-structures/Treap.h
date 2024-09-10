@@ -17,14 +17,11 @@ struct Node {
 	void pull();
 	void push();
 };
-
 int cnt(Node* n) { return n ? n->c : 0; }
 void Node::pull() { c = cnt(l) + cnt(r) + 1; }
-
-template<class F> void each(Node* n, F f) {
+void each(Node* n, auto f) {
 	if (n) { n->push(); each(n->l, f); f(n->val); each(n->r, f); }
 }
-
 pair<Node*, Node*> split(Node* n, int k) { // left tree has k nodes
 	if (!n) return {};
 	n->push();
@@ -40,7 +37,6 @@ pair<Node*, Node*> split(Node* n, int k) { // left tree has k nodes
 		return {n, pa.second};
 	}
 }
-
 Node* merge(Node* l, Node* r) {
 	if (!l) return r;
 	if (!r) return l;
@@ -55,12 +51,10 @@ Node* merge(Node* l, Node* r) {
 		return r;
 	}
 }
-
 Node* ins(Node* t, Node* n, int pos) {
 	auto pa = split(t, pos);
 	return merge(merge(pa.first, n), pa.second);
 }
-
 // Example application: move the range [l, r) to index k
 void move(Node*& t, int l, int r, int k) {
 	Node *a, *b, *c;

@@ -16,7 +16,7 @@
  */
 #pragma once
 
-typedef unsigned long long ull;
+using ull = unsigned long long;
 ull modmul(ull a, ull b, ull m) {
 	ll re = a * b - m * ull(1.L / m * a * b);
 	return re + m * (re < 0) - m * (re >= (ll)m);

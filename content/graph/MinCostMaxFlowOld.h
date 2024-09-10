@@ -13,20 +13,16 @@
 // We replace BFS with SPFA
 
 
-typedef tuple<int, ll, ll, ll> edge;
-typedef vector<ll> vll;
-
+using edge = tuple<int, ll, ll, ll>;
+using vll = vector<ll>;
 const ll INF = 1e18; // INF = 1e18, not 2^63-1 to avoid overflow
-
-class min_cost_max_flow {
-private:
+struct min_cost_max_flow {
   int V;
   ll total_cost;
   vector<edge> EL;
   vector<vi> AL;
   vll d;
   vi last, vis;
-
   bool SPFA(int s, int t) { // SPFA to find augmenting path in residual graph
     d.assign(V, INF); d[s] = 0; vis[s] = 1;
     queue<int> q({s});
@@ -42,7 +38,6 @@ private:
     }
     return d[t] != INF;                           // has an augmenting path
   }
-
   ll DFS(int u, int t, ll f = INF) {             // traverse from s->t
     if ((u == t) || (f == 0)) return f;
     vis[u] = 1;
@@ -62,14 +57,11 @@ private:
     vis[u] = 0;
     return 0;
   }
-
-public:
   min_cost_max_flow(int initialV) : V(initialV), total_cost(0) {
     EL.clear();
     AL.assign(V, vi());
     vis.assign(V, 0);
   }
-
   // if you are adding a bidirectional edge u<->v with weight w into your
   // flow graph, set directed = false (default value is directed = true)
   void add_edge(int u, int v, ll w, ll c, bool directed = true) {
@@ -80,7 +72,6 @@ public:
     AL[v].push_back(EL.size()-1);        // remember this index
     if (!directed) add_edge(v, u, w, c); // add again in reverse
   }
-
   pair<ll, ll> mcmf(int s, int t) {
     ll mf = 0;                           // mf stands for max_flow
     while (SPFA(s, t)) {                 // an O(V^2*E) algorithm

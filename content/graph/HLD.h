@@ -41,7 +41,7 @@ template <bool VALS_EDGES> struct HLD {
 			dfsHld(u);
 		}
 	}
-	template <class B> void process(int u, int v, B op) {
+	void process(int u, int v, auto op) {
 		for (; rts[u] != rts[v]; v = par[rts[v]]) {
 			if (depth[rts[u]] > depth[rts[v]]) swap(u, v);
 			op(pos[rts[v]], pos[v] + 1);

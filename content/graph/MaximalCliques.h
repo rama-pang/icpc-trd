@@ -15,9 +15,8 @@
 /// degree, where degrees go down as nodes are removed.
 /// (mostly irrelevant given MaximumClique)
 
-typedef bitset<128> B;
-template<class F>
-void cliques(vector<B>& eds, F f, B P = ~B(), B X={}, B R={}) {
+using B = bitset<128>;
+void cliques(vector<B>& eds, auto f, B P = ~B(), B X={}, B R={}) {
 	if (!P.any()) { if (!X.any()) f(R); return; }
 	auto q = (P | X)._Find_first();
 	auto cands = P & ~eds[q];

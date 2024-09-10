@@ -11,8 +11,8 @@
 
 struct treeDecomp {
   bool valid;
-  vector<int> par;
-  vector<vector<int>> bags;
+  vi par;
+  vector<vi> bags;
 };
 
 treeDecomp tree_decomposition(int n, vector<pii> edges) {
@@ -34,7 +34,7 @@ treeDecomp tree_decomposition(int n, vector<pii> edges) {
     gph[v].erase(gph[v].find(u));
   };
   int piv = 0;
-  vector<int> ord(n, -1);
+  vi ord(n, -1);
   vector<pii> pcand(n, pii(-1, -1));
   while (sz(que)) {
     int x = que.front();

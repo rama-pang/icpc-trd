@@ -13,8 +13,8 @@
 #include "Point.h"
 #include "3dHull.h"
 
-template<class P, class F>
-void delaunay(vector<P>& ps, F trifun) {
+template<class P>
+void delaunay(vector<P>& ps, auto trifun) {
 	if (sz(ps) == 3) { int d = (ps[0].cross(ps[1], ps[2]) < 0);
 		trifun(0,1+d,2-d); }
 	vector<P3> p3;

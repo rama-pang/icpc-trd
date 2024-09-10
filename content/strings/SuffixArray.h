@@ -16,9 +16,9 @@
  */
 #pragma once
 
-vector<int> suffix_array(const vector<int> &s) {
+vi suffix_array(const vi &s) {
   let n = sz(s);
-  vector<int> sa(n), rnk = s, tmp(n), p(n), c(n);
+  vi sa(n), rnk = s, tmp(n), p(n), c(n);
   iota(all(sa), 0);
   for (int k = 1; k < n; k *= 2) {
     auto cmp = [&](int x, int y) {
@@ -44,11 +44,10 @@ vector<int> suffix_array(const vector<int> &s) {
   }
   return sa;
 }
-
-vector<int> lcp_array(const vector<int> &s, const vector<int> &sa) {
+vi lcp_array(const vi &s, const vi &sa) {
   int n = sz(s), h = 0;
   assert(n >= 1);
-  vector<int> rnk(n), lcp(n - 1);
+  vi rnk(n), lcp(n - 1);
   rep(i, 0, n) { rnk[sa[i]] = i; }
   rep(i, 0, n) {
     if (h > 0) h--;
@@ -61,12 +60,11 @@ vector<int> lcp_array(const vector<int> &s, const vector<int> &sa) {
   }
   return lcp;
 }
-
 struct LCP {
   int N;
-  vector<int> sainv;  // len = N
+  vi sainv;  // len = N
   RMQ<int> rmq;
-  LCP(const vector<int> s) : N(sz(s)), sainv{}, rmq{{}} {
+  LCP(const vi s) : N(sz(s)), sainv{}, rmq{{}} {
     auto sa = suffix_array(s);
     auto lcp = lcp_array(s, sa);
     sainv.resize(N);

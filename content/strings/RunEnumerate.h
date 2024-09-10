@@ -35,7 +35,7 @@
 
 #pragma once
 
-vector<pair<int, int>> lyndon_factorization(const vector<int> &S) {
+vector<pair<int, int>> lyndon_factorization(const vi &S) {
   let N = sz(S);
   vector<pair<int, int>> ret;
   for (int l = 0; l < N;) {
@@ -45,11 +45,10 @@ vector<pair<int, int>> lyndon_factorization(const vector<int> &S) {
   }
   return ret;
 }
-
-vector<int> longest_lyndon_prefixes(const vector<int> &s, const LCP &rh) {
+vi longest_lyndon_prefixes(const vi &s, const LCP &rh) {
   let N = sz(s);
   vector<pair<int, int>> st{{N, N}};
-  vector<int> ret(N);
+  vi ret(N);
   for (int i = N - 1, j = i; i >= 0; i--, j = i) {
     while (sz(st) > 1) {
       int iv = st.back().first, jv = st.back().second;
@@ -63,8 +62,7 @@ vector<int> longest_lyndon_prefixes(const vector<int> &s, const LCP &rh) {
   }
   return ret;
 }
-
-vector<tuple<int, int, int>> run_enumerate(vector<int> s) {
+vector<tuple<int, int, int>> run_enumerate(vi s) {
   if (s.empty()) return {};
   LCP rh(s);
   reverse(all(s));

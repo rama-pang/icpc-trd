@@ -36,7 +36,7 @@ struct FT2 {
 };
 
 struct FT3{ // also with x-coordinate compression
-	vector<int> xs;FT2 f={0};
+	vi xs;FT2 f={0};
 	void fakeUpdate1(int x){xs.push_back(x);}
 	void init(){ sort(all(xs)),f={sz(xs)}; }
 	void fakeUpdate2(int x,int y){ f.fakeUpdate(ind(x),y); }

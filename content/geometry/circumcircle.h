@@ -17,7 +17,7 @@ The circumcirle of a triangle is the circle intersecting all three vertices. ccR
 
 #include "Point.h"
 
-typedef Point<double> P;
+using P = Point<double>;
 double ccRadius(const P& A, const P& B, const P& C) {
 	return (B-A).len()*(C-B).len()*(A-C).len()/
 			abs((B-A).cross(C-A))/2;

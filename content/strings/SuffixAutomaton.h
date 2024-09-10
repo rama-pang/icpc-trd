@@ -11,26 +11,23 @@
  * https://assets.hkoi.org/training2022/automata.pdf.
  */
 
-template <int ALPHABET_SIZE = 26>
+template <int Sigma = 26>
 struct SuffixAutomaton {
   struct Node {
     int link, length;
-    array<int, ALPHABET_SIZE> nxt;
+    array<int, Sigma> nxt;
     Node() : link(0), length(0), nxt({}) {}
   };
-
   vector<Node> t;
   SuffixAutomaton() {
     t.resize(2);  // [0: invalid, 1: empty string]
     fill(begin(t[0].nxt), end(t[0].nxt), 1);
     t[0].length = -1;
   }
-
   int NewNode() {
     t.emplace_back();
     return t.size() - 1;
   }
-
   int Extend(int p, int c) {  // p is current state, c is new character
     auto AddCont = [&]() {
       int q = t[p].nxt[c];

@@ -19,7 +19,7 @@
 
 struct ColorMat {
 	vi cnt, clr;
-	ColorMat(int n, vector<int> clr) : cnt(n), clr(clr) {}
+	ColorMat(int n, vi clr) : cnt(n), clr(clr) {}
 	bool check(int x) { return !cnt[clr[x]]; }
 	void add(int x) { cnt[clr[x]]++; }
 	void clear() { fill(all(cnt), 0); }
@@ -46,7 +46,7 @@ template <class M1, class M2> struct MatroidIsect {
 		return ans;
 	}
 	bool augment() {
-		vector<int> frm(n, -1);
+		vi frm(n, -1);
 		queue<int> q({n}); // starts at dummy node
 		auto fwdE = [&](int a) {
 			vi ans;

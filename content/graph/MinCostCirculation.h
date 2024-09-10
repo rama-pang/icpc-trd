@@ -36,7 +36,6 @@ struct MinCostFlow {
   void add_demand(int v, Flow amount) { b[v] -= amount; }
   void push(Edge &e, Flow amount) { e.flow += amount, rev(e).flow -= amount; }
   Cost res_cost(const Edge &e) { return e.cost + pi[e.src] - pi[e.dst]; }
-
   bool dual(const Flow delta) {
     dist.assign(n, unreachable);
     parent.assign(n, nullptr);
@@ -65,7 +64,6 @@ struct MinCostFlow {
     rep(v, 0, n) pi[v] += min(dist[v], farthest);
     return deficit_count > 0;
   }
-
   void primal(const Flow delta) {
     for (auto t : deficit_vs) {
       if (dist[t] > farthest) continue;
@@ -87,7 +85,6 @@ struct MinCostFlow {
       b[t] += f, b[v] -= f;
     }
   }
-
   void saturate_negative(const Flow delta) {
     for (auto &es : g) {
       for (auto &e : es) {
@@ -108,7 +105,6 @@ struct MinCostFlow {
       if (b[v] < 0) deficit_vs.push_back(v);
     }
   }
-
   optional<Cost> solve() {  // bool = whether solution exists
     pi.resize(n);
     Flow inf_flow = 1, delta = 1;

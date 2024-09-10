@@ -10,17 +10,17 @@
 
 struct Ladder{
 	vector<array<int, 20>> jump;  // set this to be large enough
-	vector<int> ladder, li;
+	vi ladder, li;
 
-	Ladder(vector<int> const& par, int root): jump(sz(par)), li(sz(par), -1) {
+	Ladder(vi const& par, int root): jump(sz(par)), li(sz(par), -1) {
 		assert(par[root]<0);
 
-		vector<vector<int>> add(sz(par));
+		vector<vi> add(sz(par));
 		rep(i, 0, sz(add)){
 			if(par[i]>=0) add[par[i]].push_back(i);
 		}
 
-		vector<int> md(sz(add)), dc(sz(add), -1); // maxDepthBelow, deepestChild
+		vi md(sz(add)), dc(sz(add), -1); // maxDepthBelow, deepestChild
 		YComb([&](auto dfs, int i)->int{
 			jump[i][0]=par[i];
 			rep(l, 1, sz(jump[i])){
