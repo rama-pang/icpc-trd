@@ -14,13 +14,10 @@ int matInv(vector<vector<Mod>>& A) {
 	int n = sz(A); vi col(n);
 	vector<vector<Mod>> tmp(n, vector<Mod>(n));
 	rep(i,0,n) tmp[i][i] = 1, col[i] = i;
-
 	rep(i,0,n) {
 		int r = i, c = i;
 		rep(j,i,n) rep(k,i,n) if (A[j][k] != 0) {
-      r = j, c = k;
-      break;
-    }    
+      r = j, c = k; break; }
 		if (A[r][c] == 0) return i;
 		A[i].swap(A[r]), tmp[i].swap(tmp[r]);
 		rep(j,0,n) swap(A[j][i], A[j][c]), swap(tmp[j][i], tmp[j][c]);
@@ -36,13 +33,10 @@ int matInv(vector<vector<Mod>>& A) {
 		rep(j,0,n) tmp[i][j] *= v;
 		A[i][i] = 1;
 	}
-
-	/// forget A at this point, just eliminate tmp backward
 	down(i, n) rep(j,0,i) {
 		Mod v = A[j][i];
 		rep(k,0,n) tmp[j][k] -= v*tmp[i][k];
 	}
-
 	rep(i,0,n) rep(j,0,n) A[col[i]][col[j]] = tmp[i][j];
 	return n;
 }
@@ -55,7 +49,6 @@ vector<pii> generalMatching(int n, const vector<pii> &ed) {
 	}
 	int r = matInv(A = mat), m = 2 * n - r, fi, fj;
 	assert(r % 2 == 0); // return r/2; // size of matching
-
 	if (m != n) do {
 		mat.resize(m, vector<Mod>(m));
 		rep(i,0,n) {
@@ -66,7 +59,6 @@ vector<pii> generalMatching(int n, const vector<pii> &ed) {
 			}
 		}
 	} while (matInv(A = mat) != m);
-
 	vi has(m, 1);
 	vector<pii> re;
 	rep(it, 0, m/2) {

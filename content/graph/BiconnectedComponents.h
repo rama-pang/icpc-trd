@@ -7,7 +7,8 @@
  *  runs a callback for the edges in each. In a biconnected component there
  *  are at least two distinct paths between any two nodes. Note that a node can
  *  be in several components. An edge which is not in a component is a bridge,
- *  i.e., not part of any cycle.
+ *  i.e., not part of any cycle. For block-cut tree, create a new block-node
+ *  for each call to f(x), connect it to all nodes in edge list x.
  * Usage:
  *  int eid = 0; ed.resize(N);
  *  for each edge (a,b) {
