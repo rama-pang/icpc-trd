@@ -10,56 +10,47 @@
  */
 #pragma once
 
-vector<int> spare; struct Data{ static vector<Data> data; struct Node{
-	int i=-1;
-	static Node create(int val){
-		Node result;
-		if(spare.empty()) result.i=sz(data), data.push_back({}), data.back().val=val;
-		else result.i=spare.back(), result->val=val, spare.pop_back();
-		return result;
-	}
-	explicit operator bool(){return i>=0;}
-	Data* operator->(){return &data[i];}
-#define n (*this)
-	int cnt(){return n ? n->c: 0;}
-	void pull(){n->c=n->l.cnt()+n->r.cnt()+1;}
-	void push(){}
-	pair<Node, Node> splitBySize(int k){ // left tree has k nodes
-		if(!n) return {};
-		push();
-		if(n->l.cnt()>=k){ // "n->val >= k" for lower_bound(k) (<k in first, >=k in second)
-			auto pa=n->l.splitBySize(k);
-			n->l=pa.second;
-			pull();
-			return {pa.first, n};
-		}else{
-			auto pa=n->r.splitBySize(k-n->l.cnt()-1); // and just "k"
-			n->r=pa.first;
-			pull();
-			return {n, pa.second};
-		}
-	}
-	Node merge(Node r){
-		if(!n) return r;
-		if(!r) return n;
-		n.push(), r.push();
-		if(n->y>r->y){
-			n->r=n->r.merge(r);
-			n.pull();
-			return n;
-		}else{
-			r->l=n.merge(r->l);
-			r.pull();
-			return r;
-		}
-	}
-#undef n
+struct Node {
+	Node *l = 0, *r = 0;
+	int val, y, c = 1; // val: value stored, y: priority, c: count node in subtree
+	Node(int val) : val(val), y(rand()) {}
+	void pull();
+	void push();
 };
-	Node l{}, r{};
-	int val, y=int(engine()), c=1; // val: value stored, y: priority, c: count node in subtree
-};
-vector<Data> Data::data; using Node=Data::Node;
-
+int cnt(Node* n) { return n ? n->c : 0; }
+void Node::pull() { c = cnt(l) + cnt(r) + 1; }
+void each(Node* n, auto f) {
+	if (n) { n->push(); each(n->l, f); f(n->val); each(n->r, f); }
+}
+pair<Node*, Node*> split(Node* n, int k) { // left tree has k nodes
+	if (!n) return {};
+	n->push();
+	if (cnt(n->l) >= k) { // "n->val >= k" for lower_bound(k) (<k in first, >=k in second)
+		auto pa = split(n->l, k);
+		n->l = pa.second;
+		n->pull();
+		return {pa.first, n};
+	} else {
+		auto pa = split(n->r, k - cnt(n->l) - 1); // and just "k"
+		n->r = pa.first;
+		n->pull();
+		return {n, pa.second};
+	}
+}
+Node* merge(Node* l, Node* r) {
+	if (!l) return r;
+	if (!r) return l;
+	l->push(), r->push();
+	if (l->y > r->y) {
+		l->r = merge(l->r, r);
+		l->pull();
+		return l;
+	} else {
+		r->l = merge(l, r->l);
+		r->pull();
+		return r;
+	}
+}
 Node* ins(Node* t, Node* n, int pos) {
 	auto pa = split(t, pos);
 	return merge(merge(pa.first, n), pa.second);
