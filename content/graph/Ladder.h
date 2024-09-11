@@ -11,15 +11,12 @@
 struct Ladder{
 	vector<array<int, 20>> jump;  // set this to be large enough
 	vi ladder, li;
-
 	Ladder(vi const& par, int root): jump(sz(par)), li(sz(par), -1) {
 		assert(par[root]<0);
-
 		vector<vi> add(sz(par));
 		rep(i, 0, sz(add)){
 			if(par[i]>=0) add[par[i]].push_back(i);
 		}
-
 		vi md(sz(add)), dc(sz(add), -1); // maxDepthBelow, deepestChild
 		YComb([&](auto dfs, int i)->int{
 			jump[i][0]=par[i];
@@ -33,7 +30,6 @@ struct Ladder{
 			}
 			return md[i];
 		})(root);
-
 		ladder.reserve(sz(par)*2);
 		YComb([&](auto dfs, int i)->void{
 			int j=i;
@@ -51,10 +47,8 @@ struct Ladder{
 				j=dc[j];
 			}
 		})(root);
-
 		for(int x: li) assert(x>=0);
 	}
-
 	int doJump(int node, int count) const{
 		assert(node>=0);
 		if(count==0) return node;

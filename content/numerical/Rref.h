@@ -23,7 +23,6 @@ void rref(auto& a){
 		{
 			swap(a[row], a[fix]);
 			//if(row!=fix) det=-det;
-
 			//det*=a[fix][col];
 			let d=1/a[fix][col];
 			rep(j, col, sz(a[0])) a[fix][j]*=d;
@@ -33,7 +32,6 @@ void rref(auto& a){
 				rep(j, col, sz(a[0]))
 					a[i][j]-=a[fix][j]*d;
 			}
-
 			++fix;
 #if RREFFINITEFIELD
 			break;

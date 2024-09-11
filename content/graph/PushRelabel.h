@@ -10,7 +10,6 @@
  */
 #pragma once
 
-
 struct PushRelabel {
 	struct Edge {
 		int dest, back;
@@ -21,13 +20,11 @@ struct PushRelabel {
 	vector<Edge*> cur;
 	vector<vi> hs; vi H;
 	PushRelabel(int n) : g(n), ec(n), cur(n), hs(2*n), H(n) {}
-
 	void addEdge(int s, int t, ll cap, ll rcap=0) {
 		if (s == t) return;
 		g[s].push_back({t, sz(g[t]), 0, cap});
 		g[t].push_back({s, sz(g[s])-1, 0, rcap});
 	}
-
 	void addFlow(Edge& e, ll f) {
 		Edge &back = g[e.dest][e.back];
 		if (!ec[e.dest] && f) hs[H[e.dest]].push_back(e.dest);
@@ -39,7 +36,6 @@ struct PushRelabel {
 		vi co(2*v); co[0] = v-1;
 		rep(i,0,v) cur[i] = g[i].data();
 		for (Edge& e : g[s]) addFlow(e, e.c);
-
 		for (int hi = 0;;) {
 			while (hs[hi].empty()) if (!hi--) return -ec[s];
 			int u = hs[hi].back(); hs[hi].pop_back();

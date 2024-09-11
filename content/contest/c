@@ -1,1 +1,1 @@
-g++ -std=c++17 -g -DLOCAL -D_GLIBCXX_DEBUG -Wall -Wconversion -ftrapv "$@"
+g++ -std=gnu++20 -g -DLOCAL -D_GLIBCXX_DEBUG -Wall -Wconversion -ftrapv "$@"

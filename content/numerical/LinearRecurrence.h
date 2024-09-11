@@ -22,7 +22,6 @@
 Mod linearRec(vm S, vm tr, ll p) {
 	int n = sz(tr);
 	assert(sz(S)==n);
-
 #if not SLOWLINEARREC
 	auto m=tr;
 	for(auto& x: m) x=-x;
@@ -30,7 +29,6 @@ Mod linearRec(vm S, vm tr, ll p) {
 	m.push_back(1);
 	let f=Polydiv(m, n*2);
 #endif
-
 	auto combine = [&](vm a, vm b) {
 #if SLOWLINEARREC
 		vm re(n*2-1);
@@ -46,10 +44,8 @@ Mod linearRec(vm S, vm tr, ll p) {
 		return polymod(r, m, f(r));
 #endif
 	};
-
 	vm pol{1}, e{0, 1};
 	for (; p; p>>=1, e=combine(e, e)) if (p&1) pol = combine(move(pol), e);
-
 	Mod re = 0;
 	rep(i,0,sz(pol)) re += pol[i] * S[i];
 	return re;

@@ -24,7 +24,6 @@ void fillTable(auto& table, int numRow, int numCol, let& recurrence){
 		}
 	}
 }
-
 auto solveLinear_(auto a){
 	rref(a);
 	vector<decltype(a[0][0]+0)> answer(sz(a[0])-1);
@@ -47,7 +46,6 @@ auto solveLinear_(auto a){
 	while(coveredVar) assignDummy(--coveredVar);
 	return answer;
 }
-
 void findRecurrence(auto const& table, int sizeI, int sizeJ){
 	// find 2D recurrence from small number of entries that uses sizeI * sizeJ previous terms
 	vector<vector<Mod>> matrix;
@@ -63,7 +61,6 @@ void findRecurrence(auto const& table, int sizeI, int sizeJ){
 	}
 	cerr<<'\n';
 }
-
 void computeNumerator(let& table, let& recurrence){
 	// given table of naively computed values and the recurrence, compute the numerator
 	assert(recurrence.back().back()==-1);
@@ -78,13 +75,11 @@ void computeNumerator(let& table, let& recurrence){
 		cerr<<'\n';
 	}
 }
-
 Mod linearRec2D(let& table, auto tr, auto row, auto col){
 	// tr is the recurrence in the format above. Note that this is reverse of that in LinearRecurrence.h.
 	let n=sz(tr)-1;
 	assert(sz(table)==n); assert(n>0);
 	assert(sz(table[0])>col);
-
 	for(auto& row: tr) reverse(all(row));
 	auto i=polyinv(tr[n], ceillog2(col+1));
 	i.resize(col+1);
@@ -92,11 +87,9 @@ Mod linearRec2D(let& table, auto tr, auto row, auto col){
 	let conv1=[&](vm a, vm b){ a=conv(move(a), move(b)); a.resize(col+1); return a; };
 	let add1=[&](vm& a, vm const& b){ rep(i, 0, sz(a)) a[i]+=b[i]; };
 	tr.pop_back();
-
 	let k=1<<ceillog2(col*2+1);
 	for(auto& row: tr) row=conv1(row, i), row.resize(col+1), row.resize(k), ntt(row);
 	reverse(all(tr));
-
 	auto combine = [&](vector<vm> a, vector<vm> b) {
 		vector<vm> re(n*2-1, vm(k));
 		for(auto& x: a) x.resize(k), ntt(x);
@@ -110,10 +103,8 @@ Mod linearRec2D(let& table, auto tr, auto row, auto col){
 		for(auto& row: re) intt(row), row.resize(col+1);
 		return re;
 	};
-
 	vector<vm> pol{{1}}, e{{0}, {1}};
 	for (auto p=row; p; p>>=1, e=combine(e, e)) if (p&1) pol = combine(move(pol), e);
-
 	Mod re = 0;
 	rep(i,0,sz(pol)) rep(j, 0, col+1) re += pol[i][j] * table[i][col-j];
 	return re;

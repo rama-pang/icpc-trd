@@ -14,16 +14,12 @@ set<pii>::iterator addInterval(set<pii>& is, int L, int R) {
 	auto it = is.lower_bound({L, R}), before = it;
 	while (it != is.end() && it->first <= R) {
 		R = max(R, it->second);
-		before = it = is.erase(it);
-	}
+		before = it = is.erase(it); }
 	if (it != is.begin() && (--it)->second >= L) {
-		L = min(L, it->first);
-		R = max(R, it->second);
-		is.erase(it);
-	}
+		L = min(L, it->first); R = max(R, it->second);
+		is.erase(it); }
 	return is.insert(before, {L,R});
 }
-
 void removeInterval(set<pii>& is, int L, int R) {
 	if (L == R) return;
 	auto it = addInterval(is, L, R);

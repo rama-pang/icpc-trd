@@ -58,7 +58,6 @@ struct Node { // Splay tree. Root's pp contains tree's parent.
 struct LinkCut {
 	vector<Node> node;
 	LinkCut(int N) : node(N) {}
-
 	void link(int u, int v) { // add an edge (u, v)
 		assert(!connected(u, v));
 		makeRoot(&node[u]);
