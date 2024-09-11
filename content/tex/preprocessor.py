@@ -225,7 +225,7 @@ def print_header(data, outstream):
     font_size = 10
     if header_length > 150:
         font_size = 8
-    output = r"\hspace{3mm}\textbf{" + output + "}"
+    output = r"\hspace{5cm}\textbf{" + output + "}"
     output = "\\fontsize{%d}{%d}" % (font_size, font_size) + output
     print(output, file=outstream)
     with open('header.tmp', 'w') as f:

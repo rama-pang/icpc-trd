@@ -25,7 +25,7 @@ void each(Node* n, auto f) {
 pair<Node*, Node*> split(Node* n, int k) { // left tree has k nodes
 	if (!n) return {};
 	n->push();
-	if (cnt(n->l) >= k) { // "n->val >= k" for lower_bound(k)
+	if (cnt(n->l) >= k) { // "n->val >= k" for lower_bound(k) (<k in first, >=k in second)
 		auto pa = split(n->l, k);
 		n->l = pa.second;
 		n->pull();
