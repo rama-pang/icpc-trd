@@ -14,13 +14,13 @@
 
 #include "../various/BumpAllocator.h"
 
-template<class T, class L, auto tneut, auto lneut, auto op, auto mapping, auto compose>
+template<class T, class L, auto op, auto mapping, auto compose>
 struct Node {
   int lo, hi;  // current range is [lo, hi)
   unique_ptr<Node> l, r;
-  T val = tneut();
-  L lazy = lneut();
-  Node(int lo, int hi) : lo(lo), hi(hi) {}  // Large interval of tneut
+  T val {};
+  L lazy {};
+  Node(int lo, int hi) : lo(lo), hi(hi) {}  // Large interval of T {}
   Node(vector<T>& v, int lo, int hi) : lo(lo), hi(hi) {
     if (lo + 1 < hi) {
       int mid = lo + (hi - lo) / 2;
@@ -31,7 +31,7 @@ struct Node {
   }
   void apply(L upd) {val = mapping(upd, val), lazy = compose(upd, lazy); }
   T query(int lft, int rgt) {  // query [lft, rgt)
-    if (rgt <= lo || hi <= lft) return tneut();
+    if (rgt <= lo || hi <= lft) return {};
     if (lft <= lo && hi <= rgt) return val;
     push();
     return op(l->query(lft, rgt), r->query(lft, rgt));
@@ -51,17 +51,15 @@ struct Node {
       r.reset(new Node(mid, hi));
     }
     l->apply(lazy), r->apply(lazy);
-    lazy = lneut(), val = op(l->query(lo, hi), r->query(lo, hi));
+    lazy = {}, val = op(l->query(lo, hi), r->query(lo, hi));
   }
 };
-struct T { Mod val; int cnt; }; // data type
-struct L { Mod mmul, madd; };  // lazy type
-T tneut() { return {0, 0}; }
-L lneut() { return {1, 0}; }
+struct T { Mod val=0; int cnt=0; }; // data type
+struct L { Mod mmul=1, madd=0; };  // lazy type
 T op(T lft, T rgt) {  // Combine data
   return {lft.val + rgt.val, lft.cnt + rgt.cnt}; }
 T mapping(L upd, T cur) {  // Apply lazy to data
   return {cur.val * upd.mmul + cur.cnt * upd.madd, cur.cnt}; }
 L compose(L upd, L cur) {  // Compose lazy
   return L{cur.mmul * upd.mmul, cur.madd * upd.mmul + upd.madd }; }
-using Tree = Node<T, L, tneut, lneut, op, mapping, compose>;
+using Tree = Node<T, L, op, mapping, compose>;

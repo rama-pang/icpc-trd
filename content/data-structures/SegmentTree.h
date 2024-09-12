@@ -9,12 +9,12 @@
  */
 #pragma once
 
-template<class T, class L, auto tneut, auto lneut, auto op, auto mapping, auto compose>
+template<class T, class L, auto op, auto mapping, auto compose>
 struct Tree {
   int n;
   vector<T> val;
   vector<L> lazy;
-  Tree(int n) : n(n), val(2 * n, tneut()), lazy(2 * n, lneut()) {}
+  Tree(int n) : n(n), val(2 * n), lazy(2 * n) {}
   void apply(int i, L upd) {
     val[i] = mapping(upd, val[i]);
     lazy[i] = compose(upd, lazy[i]);
@@ -23,16 +23,16 @@ struct Tree {
     down(i, 31 ^ __builtin_clz(x)) {
       let y = x >> (i + 1);
       rep(c, y * 2, y * 2 + 2) apply(c, lazy[y]);
-      lazy[y] = lneut();
+      lazy[y] = {};
     }
   }
   void merge(int x) {
     while (x >>= 1) {
-      assert(lazy[x] == lneut());
+      assert(lazy[x] == L{});
       val[x] = op(val[x * 2], val[x * 2 + 1]);
     }
   }  // x ∈ [n..2n)
-  void build() { down(p, n) val[p] = op(val[p * 2], val[p * 2 + 1]); }
+  void build() { down(x, n) val[x] = op(val[x * 2], val[x * 2 + 1]); }
   void update(int x, T v) { x += n; push(x); val[x] = v; merge(x); }
   T query(int l, int r) {  // query [l, r)
     assert(0 <= l && l < r && r <= n);
