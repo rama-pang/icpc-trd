@@ -11,9 +11,8 @@
 #pragma once
 
 struct Node {
+	int val, y=int(engine()), c = 1; // val: value stored, y: priority, c: count node in subtree
 	Node *l = 0, *r = 0;
-	int val, y, c = 1; // val: value stored, y: priority, c: count node in subtree
-	Node(int val) : val(val), y(rand()) {}
 	void pull();
 	void push();
 };
