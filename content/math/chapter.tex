@@ -17,16 +17,13 @@ In general, given an equation $Ax = b$, the solution to a variable $x_i$ is give
 where $A_i'$ is $A$ with the $i$'th column replaced by $b$.
 
 \section{Recurrences}
-If $a_n = c_1 a_{n-1} + \dots + c_k a_{n-k}$, and $r_1, \dots, r_k$ are distinct roots of $x^k - c_1 x^{k-1} - \dots - c_k$, there are $d_1, \dots, d_k$ s.t.
-\[a_n = d_1r_1^n + \dots + d_kr_k^n. \]
+If $a_n = c_1 a_{n-1} + \dots + c_k a_{n-k}$, and $r_1, \dots, r_k$ are distinct roots of $x^k - c_1 x^{k-1} - \dots - c_k$, there are $d_1, \dots, d_k$ s.t. $a_n = d_1r_1^n + \dots + d_kr_k^n$.
 Non-distinct roots $r$ become polynomial factors, e.g. $a_n = (d_1n + d_2)r^n$.
 
 \section{Trigonometry}
 \begin{align*}
 \sin(v+w)&{}=\sin v\cos w+\cos v\sin w\\
 \cos(v+w)&{}=\cos v\cos w-\sin v\sin w\\
-\end{align*}
-\begin{align*}
 \tan(v+w)&{}=\dfrac{\tan v+\tan w}{1-\tan v\tan w}\\
 \sin v+\sin w&{}=2\sin\dfrac{v+w}{2}\cos\dfrac{v-w}{2}\\
 \cos v+\cos w&{}=2\cos\dfrac{v+w}{2}\cos\dfrac{v-w}{2}

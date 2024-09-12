@@ -1,6 +1,6 @@
 \chapter{Numerical}
 
-\section{Polynomials and recurrences}
+\section{Poly and recurrence}
   %\kactlimport{Polynomial.h}
   %\kactlimport{PolyRoots.h}
   %\kactlimport{PolyInterpolate.h}
@@ -27,7 +27,8 @@
   \kactlimport{Tridiagonal.h}
 
 \section{Fourier transforms}
-	\kactlimport[--caption=FFT]{FastFourierTransform.h}
+  \kactlimport{FastSubsetTransform.h}
+  \kactlimport[--caption=FFT]{FastFourierTransform.h}
 	\kactlimport[--caption=FFTMod]{FastFourierTransformMod.h}
 	\kactlimport[--caption=NTT]{NumberTheoreticTransform.h}
 	Newton's method: To solve $f(x) = 0$ starting from a root $x$, repeatedly compute
@@ -39,4 +40,6 @@
 \begin{lstlisting}
 vm a=log({1, 2, 3, 4, 5}); // {0, 2, 1, 665496236, 499122177}
 \end{lstlisting}
-	\kactlimport{FastSubsetTransform.h}
+  Multi-point Evaluation: Assme you need to compute $A(x_i)$. Note $A(x) \equiv A(x_i) \mod (x - x_i)$. Let $P_{l,r}(x) = \prod_{i=l}^{r-1} (x - x_i)$. Divide-and-conquer with by recursing to $A(x) \mod P_{l,m}$ and $A(x) \mod P_{m,r}$.
+
+  Interpolation: Note $A(x) = \sum_{i=1}^n y_i \prod_{j \neq i} \frac{x - x_j}{x_i - x_j}$. Let $P(x) = \prod_{i=1}^n (x - x_i)$. Note $P'(x_i) = \prod_{j \neq i} (x_i - x_j)$. Multi-point, then divide-and-conquer with leaf value $y_i / P'(x_i)$ and recursion $A_{l,r} = A_{l,m} P_{m,r} + P{l,m} A_{m,r}$.
