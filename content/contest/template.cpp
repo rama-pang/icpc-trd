@@ -23,23 +23,21 @@ int main() {
 }
 
 template <class T> struct YComb { T f;
-	template <class... A> auto operator()(A&&... a) const {
+  template <class... A> auto operator()(A&&... a) const {
     return f(ref(*this),forward<A>(a)...);}};
 
-template <class T> concept TupleLike =
+template<class T>concept TupleLike =
   requires{ tuple_size<decay_t<T>>::value; };
-template <class T> requires R::range<T> || TupleLike<T>
+template<class T>requires R::range<T>||TupleLike<T>
 auto& operator>>(istream& s, T&& v) {
-  let f=[&](auto&&...x){((s >> x), ...);};
+  let f=[&](auto&&...x){((s>>x),...);};
   if constexpr(R::range<T>)R::for_each(v, f);
-  else apply(f, v);
-  return s; }
-template <class T> requires R::range<T> || TupleLike<T>
+  else apply(f, v); return s; }
+template<class T>requires R::range<T>||TupleLike<T>
 auto& operator<<(ostream& s, T&& v) {
-  let f = [&](auto&&...x) { ((s << x << ' '), ...); };
-  if constexpr (R::range<T>) R::for_each(v, f);
-  else apply(f, v);
-  return s; }
+  let f=[&](auto&&...x){((s<<x<<' '),...);};
+  if constexpr(R::range<T>)R::for_each(v, f);
+  else apply(f, v); return s;}
 
 #define W(f) apply([](auto&&...a){return f;},i)
 #define D(x) W(iterator<decltype(x(a))...>({x(a)...}))
