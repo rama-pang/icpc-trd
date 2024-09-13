@@ -39,10 +39,8 @@ struct Node {
   void upd(int lft, int rgt, L upd) { // update [lft, rgt)
     if (rgt <= lo || hi <= lft) return;
     if (lft <= lo && hi <= rgt) return apply(upd);
-    else {
-      push(), l->upd(lft, rgt, upd), r->upd(lft, rgt, upd);
-      val = op(l->query(lo, hi), r->query(lo, hi));
-    }
+    push(), l->upd(lft, rgt, upd), r->upd(lft, rgt, upd);
+    val = op(l->val, r->val);
   }
   void push() {
     if (!l) {
@@ -51,7 +49,7 @@ struct Node {
       r.reset(new Node(mid, hi));
     }
     l->apply(lazy), r->apply(lazy);
-    lazy = {}, val = op(l->query(lo, hi), r->query(lo, hi));
+    lazy = {}, val = op(l->val, r->val);
   }
 };
 struct T { Mod val=0; int cnt=0; }; // data type
