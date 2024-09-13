@@ -30,8 +30,8 @@ template <class T> concept TupleLike =
   requires{ tuple_size<decay_t<T>>::value; };
 template <class T> requires R::range<T> || TupleLike<T>
 auto& operator>>(istream& s, T&& v) {
-  let f = [&](auto&&...x) { ((s >> x), ...); };
-  if constexpr (R::range<T>) R::for_each(v, f);
+  let f=[&](auto&&...x){((s >> x), ...);};
+  if constexpr(R::range<T>)R::for_each(v, f);
   else apply(f, v);
   return s; }
 template <class T> requires R::range<T> || TupleLike<T>
