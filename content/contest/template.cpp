@@ -25,28 +25,22 @@ int main() {
 template <class T> struct YComb { T f;
 	template <class... A> auto operator()(A&&... a) const {
     return f(ref(*this),forward<A>(a)...);}};
-template <class A, class B> auto&
-operator>>(istream& s, pair<A, B>& v) {
-  return s >> v.first >> v.second; }
-template <class... A> auto&
-operator>>(istream& s, tuple<A...>& v) {
-  apply([&](auto&&... x) { ((s >> x), ...); }, v);
+
+template <class T> concept TupleLike =
+  requires{ tuple_size<decay_t<T>>::value; };
+template <class T> requires R::range<T> || TupleLike<T>
+auto& operator>>(istream& s, T&& v) {
+  let f = [&](auto&&...x) { ((s >> x), ...); };
+  if constexpr (R::range<T>) R::for_each(v, f);
+  else apply(f, v);
   return s; }
-template <R::range T> auto&
-operator>>(istream& s, T&& v) {
-  R::for_each(v, [&](auto&& x) { s >> x; });
+template <class T> requires R::range<T> || TupleLike<T>
+auto& operator<<(ostream& s, T&& v) {
+  let f = [&](auto&&...x) { ((s << x << ' '), ...); };
+  if constexpr (R::range<T>) R::for_each(v, f);
+  else apply(f, v);
   return s; }
-template <class A, class B> auto&
-operator<<(ostream& s, pair<A, B> const& v) {
-  return s << v.first << ' ' << v.second; }
-template <class... A> auto&
-operator<<(ostream& s, tuple<A...> const& v) {
-  apply([&](auto&&... x) { ((s << x << ' '), ...); }, v);
-  return s; }
-template <R::range T> auto&
-operator<<(ostream& s, T&& v) {
-  R::for_each(v, [&](auto&& x) { s << x << ' '; });
-  return s; }
+
 #define W(f) apply([](auto&&...a){return f;},i)
 #define D(x) W(iterator<decltype(x(a))...>({x(a)...}))
 template<class... A>struct zip_view
