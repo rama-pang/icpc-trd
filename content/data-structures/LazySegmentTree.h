@@ -34,7 +34,7 @@ struct Node {
     if (rgt <= lo || hi <= lft) return {};
     if (lft <= lo && hi <= rgt) return val;
     push();
-    return op(l->query(lft, rgt), r->query(lft, rgt));
+    return op(l->val, r->val);
   }
   void upd(int lft, int rgt, L upd) { // update [lft, rgt)
     if (rgt <= lo || hi <= lft) return;
