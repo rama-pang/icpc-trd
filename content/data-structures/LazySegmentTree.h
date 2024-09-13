@@ -3,7 +3,7 @@
  * Date: 2016-10-08
  * License: CC0
  * Source: IvanRenison
- * Description: Segment tree with ability to add or set values of large intervals, and compute max of intervals.
+ * Description: Segment tree with ability to add or set values of large intervals, and compute max of intervals. If persistent, inside update() body we assume we can make changes (e.g. current node is already cloned).
  * Can be changed to other things.
  * Use with a bump allocator for better performance, and SmallPtr or implicit indices to save memory.
  * Time: O(\log N).
@@ -15,7 +15,7 @@
 #include "../various/BumpAllocator.h"
 
 template<class T, class L, auto op, auto mapping, auto compose>
-struct Node {
+struct Node {  // if pers, clone() every time before update
   int lo, hi;  // current range is [lo, hi)
   unique_ptr<Node> l, r;
   T val {};
@@ -30,19 +30,22 @@ struct Node {
     } else val = v[lo];
   }
   void apply(L upd) {val = mapping(upd, val), lazy = compose(upd, lazy); }
-  T query(int lft, int rgt) {  // query [lft, rgt)
+  T query(int lft, int rgt /*pers:L lz={}*/) {  // query [lft, rgt)
     if (rgt <= lo || hi <= lft) return {};
-    if (lft <= lo && hi <= rgt) return val;
-    push();
+    if (lft <= lo && hi <= rgt) return val; // pers: mapping(lz, val);
+    push(); // pers: comment this line
+    // pers: op(l->query(lft, rgt, compose(lz, lazy)), ...);
     return op(l->query(lft, rgt), r->query(lft, rgt));
   }
   void upd(int lft, int rgt, L upd) { // update [lft, rgt)
     if (rgt <= lo || hi <= lft) return;
     if (lft <= lo && hi <= rgt) return apply(upd);
-    push(), l->upd(lft, rgt, upd), r->upd(lft, rgt, upd);
+    push();  // pers: auto [l, r] = push();
+    l->upd(lft, rgt, upd), r->upd(lft, rgt, upd);
     val = op(l->val, r->val);
   }
-  void push() {
+  void push() { // pers: return pair<Node*>
+    // pers: Node *l1 = clone(l) or new(lo, mid)
     if (!l) {
       int mid = lo + (hi - lo) / 2;
       l.reset(new Node(lo, mid));
@@ -50,6 +53,7 @@ struct Node {
     }
     l->apply(lazy), r->apply(lazy);
     lazy = {}, val = op(l->val, r->val);
+    // pers: l = l1, r = r1; return {l1, r1};
   }
 };
 struct T { Mod val=0; int cnt=0; }; // data type
