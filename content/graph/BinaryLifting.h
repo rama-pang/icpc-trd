@@ -24,9 +24,9 @@ int jmp(vector<vi>& tbl, int nod, int steps){
 		if(steps&(1<<i)) nod = tbl[i][nod];
 	return nod;
 }
-int lca(vector<vi>& tbl, vi& depth, int a, int b) {
-	if (depth[a] < depth[b]) swap(a, b);
-	a = jmp(tbl, a, depth[a] - depth[b]);
+int lca(vector<vi>& tbl, vi& dep, int a, int b) {
+	if (dep[a] < dep[b]) swap(a, b);
+	a = jmp(tbl, a, dep[a] - dep[b]);
 	if (a == b) return a;
 	for (int i = sz(tbl); i--;) {
 		int c = tbl[i][a], d = tbl[i][b];

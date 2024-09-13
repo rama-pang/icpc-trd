@@ -30,12 +30,12 @@
  * significantly.
  *
  * Subtle implementation notes:
- * - we operate on residues in [1, n]; modmul can be proven to work for those
- * - prd starts off as 2 to handle the case n = 4; it's harmless for other n
- *   since we're guaranteed that n > 2. (Pollard rho has problems with prime
- *   powers in general, but all larger ones happen to work.)
- * - t starts off as 30 to make the first gcd check come earlier, as an
- *   optimization for small numbers.
+ * (1) we operate on residues in [1, n]; modmul can be proven to work for those
+ * (2) prd starts off as 2 to handle the case n = 4; it's harmless for other n
+ *     since we're guaranteed that n > 2. (Pollard rho has problems with prime
+ *     powers in general, but all larger ones happen to work.)
+ * (3) t starts off as 30 to make the first gcd check come earlier, as an
+ *     optimization for small numbers.
  */
 #pragma once
 

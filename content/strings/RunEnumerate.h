@@ -22,15 +22,15 @@
  * `run\_enumerate`
  * Compute all runs in given string, returning tuples $(l,r,p)$ in O(n log n)
  * Given a string $S$, the tuple $(l,r,p)$ is a run of string $S$ if
- * - $0 \leq l < r \leq |S|$
- * - $1 \leq p \leq |S|$
- * - $r - l \geq 2p$
- * - $p$ is the smallest positive integer where $S[i]=S[i+p]$ holds for all $l \leq i < r-p$.
- * - The above four properties doesn't hold for tuple $(l-1,r,p)$ and $(l,r+1,p)$.
+ * (1) $0 \leq l < r \leq |S|$
+ * (2) $1 \leq p \leq |S|$
+ * (3) $r - l \geq 2p$
+ * (4) $p$ is the smallest positive integer where $S[i]=S[i+p]$ holds for all $l \leq i < r-p$.
+ * (5) The above four properties doesn't hold for tuple $(l-1,r,p)$ and $(l,r+1,p)$.
  * Facts about runs
- * - There are at most $n$ runs.
- * - The sum of $(r-l)/p$ for all runs are at most $3n$.
- * - The sum of 2-repeats $(r-l-2p+1)$ obtained from runs are at most $n \log n$.
+ * (1) There are at most $n$ runs.
+ * (2) The sum of $(r-l)/p$ for all runs are at most $3n$.
+ * (3) The sum of 2-repeats $(r-l-2p+1)$ obtained from runs are at most $n \log n$.
  */
 
 #pragma once
