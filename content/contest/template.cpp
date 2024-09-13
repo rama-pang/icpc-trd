@@ -31,10 +31,10 @@ template <class T> concept Print =
 template <Print T>
 auto& operator>>(istream& s, T&& v) {
   let f=[&](auto&&...x){((s >> x), ...);};
-  if constexpr (R::range<T>) R::for_each(v, f);
+  if constexpr(R::range<T>)R::for_each(v, f);
   else { apply(f, v); } return s; }
 template <Print T>
 auto& operator<<(ostream& s, T&& v) {
   let f=[&](auto&&...x){((s << x << ' '), ...);};
-  if constexpr (R::range<T>) R::for_each(v, f);
+  if constexpr(R::range<T>)R::for_each(v, f);
   else { apply(f, v); } return s; }
