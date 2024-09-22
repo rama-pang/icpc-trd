@@ -294,61 +294,12 @@
 	\kactlimportinner{#1}{#2}
 }
 
-\IfFileExists{pythonimmediate.sty}{\iftrue}{\iffalse}
-\usepackage{pythonimmediate}
-\begin{pycodefuzzy}
-from pythonimmediate import*
-from pythonimmediate.simple import*
 
-
-assert __name__!="__main__"
-
-import io
-import contextlib
-
-main=None
-
-@newcommand
-def kactlimportinner()->None:
-
-	if main is None:
-		basedir=Path(T['@kactlbasedir'].estr())
-		globals()["__file__"]=str(basedir/"tex/preprocessor.py")
-		exec(
-				(basedir/"tex/preprocessor.py")
-				.read_text(encoding='u8'), globals()
-				)
-
-	extra_args=get_arg_str()
-	file_name=get_arg_str()
-	wlog("========" + file_name)
-	sys.argv[1:] = [  "-i", str(Path(T['@kactldir'].estr())/file_name), *extra_args.split()]
-	with io.StringIO() as f:
-		with contextlib.redirect_stdout(f):
-			main()
-		print_TeX(f.getvalue())
-
-@newcommand
-def cheadcontent()->None:
-	# \chead{\immediate\write18{python3 \@kactlbasedir/tex/preprocessor.py --print-header "\splitbotmarks\hdrmark|\botmarks\hdrmark" -o \@builddir/header2.tmp}\immediate\input{\@builddir/header2.tmp}}
-
-	with io.StringIO() as f:
-		print_header(
-				BalancedTokenList(r"\splitbotmarks\hdrmark|\botmarks\hdrmark").expand_x().detokenize(), f)
-		print_TeX(f.getvalue(), end="")
-
-execute(r""" \chead{\cheadcontent} """)
-# override it
-\end{pycodefuzzy}
-
-\else
-
-	\newcommand\kactlimportinner[2]{
-		\immediate\write18{rm -f \@builddir/kactl.tmp} % Don't include old kactl.tmp on failure.
-		\immediate\write18{python3 \@kactlbasedir/tex/preprocessor.py -i "\@kactldir/#2" -o \@builddir/kactl.tmp #1}
-		\immediate\input{\@builddir/kactl.tmp}
-	}
-\fi
+\newcommand\kactlimportinner[2]{
+	\immediate\write18{rm -f \@builddir/kactl.tmp} % Don't include old kactl.tmp on failure.
+	\immediate\write18{python3 \@kactlbasedir/tex/preprocessor.py -i "\@kactldir/#2" -o \@builddir/kactl.tmp #1}
+	\immediate\input{\@builddir/kactl.tmp}
+}
 
 
 
